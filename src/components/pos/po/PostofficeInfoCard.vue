@@ -1,0 +1,105 @@
+<template>
+   <v-card>
+      <v-card-row class="green lighten-3">
+         <v-card-title><span class="">Отделение подробно</span></v-card-title>
+      </v-card-row>
+      <v-card-text>
+         <v-layout row>
+            <v-flex xs4>
+               <v-subheader>Индекс</v-subheader>
+            </v-flex>
+            <v-flex xs8>
+               <v-text-field
+                  name="postalCode"
+                  label="Индекс"
+                  id="title"
+                  prepend-icon="event"
+                  v-model="po.postalCode" readonly
+                  ></v-text-field>
+            </v-flex>
+         </v-layout>
+         <v-layout row>
+            <v-flex xs4>
+               <v-subheader>Адрес</v-subheader>
+            </v-flex>
+            <v-flex xs8>
+               <v-text-field
+                  name="addressSource"
+                  label="Адрес"
+                  id="addressSource"
+                  prepend-icon="event"
+                  v-model="po.addressSource" readonly
+                  ></v-text-field>
+            </v-flex>
+         </v-layout>
+         
+         <v-layout row>
+            <v-flex xs4>
+               <v-subheader>Регион</v-subheader>
+            </v-flex>
+            <v-flex xs8>               
+                  <v-text-field 
+                     label="Регион"
+                     v-model="po.region"
+                     prepend-icon="event"
+                     readonly
+                     ></v-text-field>                  
+            </v-flex>
+         </v-layout>
+         <v-layout row>
+            <v-flex xs4>
+               <v-subheader>Город</v-subheader>
+            </v-flex>
+            <v-flex xs8>               
+                  <v-text-field 
+                     label="Город"
+                     v-model="po.settlement"
+                     prepend-icon="event"
+                     readonly
+                     ></v-text-field>                  
+            </v-flex>
+         </v-layout>
+               
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-row actions>
+         <v-btn @click.native="confirmNewBtn" success light>
+            <v-icon light>done</v-icon>
+            
+         </v-btn>
+      </v-card-row>
+   </v-card>
+</template>
+<script>
+import moment from 'moment';
+
+moment().locale('ru');
+export default {
+    name: 'eventdetail',
+    data() {
+        return {
+
+        };
+    },
+    mounted() {
+
+    },
+    watch: {
+
+    },
+    computed: {
+        po() {
+            return this.$store.state.po.currPO;
+        }
+    },
+    methods: {
+        confirmNewBtn() {
+        }
+    }
+};
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="stylus" scoped>
+   
+</style>
