@@ -63,9 +63,13 @@
       </v-card-text>
       <v-divider></v-divider>
       <v-card-row actions>
+         <v-btn @click.native="goDetailView" success light class="pr-1">
+            <v-icon light>details</v-icon>
+            Техника & ПО
+         </v-btn>
+      
          <v-btn @click.native="confirmNewBtn" success light>
-            <v-icon light>done</v-icon>
-            
+            <v-icon light>done</v-icon>            
          </v-btn>
       </v-card-row>
    </v-card>
@@ -94,6 +98,14 @@ export default {
     },
     methods: {
         confirmNewBtn() {
+        },
+        goDetailView() {
+            this.$router.push({
+                path: '/post-offices-detail',
+                params: {
+                    hi: 'hi @at31'
+                }
+            });
         }
     }
 };
@@ -101,5 +113,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
-   
+   div.card__row--actions{
+    justify-content: space-between;
+   }
 </style>

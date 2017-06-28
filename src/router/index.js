@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Hello from '@/components/Hello';
+import Radar from '@/components/evnts/radar/Radar';
 import Users from '@/components/users';
 import ListsIndex from '@/components/lists/LIstsIndex';
 import Listnew from '@/components/lists/Listnew1';
@@ -8,6 +8,7 @@ import Listnewevnt from '@/components/lists/Listnew2';
 import EventNew from '@/components/evnts/EventNew';
 import EventsIndex from '@/components/evnts/EventsIndex';
 import PostOffices from '@/components/pos/po/PostofficeIndex';
+import PostOfficesDetail from '@/components/pos/po/PostofficeIndexDetail';
 
 Vue.use(Router);
 
@@ -15,8 +16,8 @@ export default new Router({
     routes: [
         {
             path: '/',
-            name: 'Hello',
-            component: Hello
+            name: 'Radar',
+            component: Radar
         },
         {
             path: '/users',
@@ -55,6 +56,11 @@ export default new Router({
             path: '/post-offices',
             name: 'PostOffices',
             component: PostOffices
+        },
+        {
+            path: '/post-offices-detail',
+            name: 'PostOfficesDetail',
+            component: PostOfficesDetail
         }
     ]
 });

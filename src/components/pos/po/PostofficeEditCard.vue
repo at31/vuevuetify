@@ -57,8 +57,11 @@
                      ></v-text-field>                  
             </v-flex>
          </v-layout>
-               
+      <v-divider></v-divider>
+           
       </v-card-text>
+      <v-divider></v-divider>
+      
       <v-divider></v-divider>
       <v-card-row actions>
          <v-btn @click.native="showAddress" primary light>
@@ -67,6 +70,10 @@
          </v-btn>
       </v-card-row>
       <v-card-row actions>
+        <v-btn @click.native="goDetailView" success light class="pr-1">
+            <v-icon light>details</v-icon>
+            Техника & ПО
+         </v-btn>
          <v-btn @click.native="confirmNewBtn" primary light>
             <v-icon light>done</v-icon>
             Подтвердить изменения
@@ -82,7 +89,10 @@ export default {
     name: 'editPOCard',
     data() {
         return {
-
+            soft: [
+          {title: 'какой-то софт', description: 'какое-то пописание', id: '123'},
+          {title: 'какой-то софт2', description: 'какое-то пописание', id: '1234'}
+            ]
         };
     },
     mounted() {
@@ -102,6 +112,17 @@ export default {
         },
         showAddress() {
             this.$store.commit('SHOW_NEW_ADDRESS', this.po.addressSource);
+        },
+        addNewHard() {
+            this.soft.push({title: 'какой-то софт2', description: 'какое-то пописание', id: '12345'});
+        },
+        goDetailView() {
+            this.$router.push({
+                path: '/post-offices-detail',
+                params: {
+                    hi: 'hi @at31'
+                }
+            });
         }
     }
 };
@@ -109,5 +130,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
-   
+   div.card__row--actions{
+    justify-content: space-between;
+   }
 </style>

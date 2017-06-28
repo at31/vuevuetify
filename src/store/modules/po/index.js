@@ -12,11 +12,16 @@ const state = {
         longitude: '',
         addressSource: '',
         region: '',
-        settlement: ''
+        settlement: '',
+        comps: [{id: '', soft: [{'id': ''}]}]
     },
     showPODialog: false,
     poCardType: '',
-    newAddressSource: ''
+    newAddressSource: '',
+    currComp: {show: false},
+    currSoft: {show: false},
+    newCompShow: {show: false},
+    newSoftShow: {show: false}
 };
 
 // getters
@@ -50,6 +55,20 @@ const actions = {
 
 // mutations
 const mutations = {
+    SET_NEW_COMP(state, s) {
+        state.newCompShow = s;
+    },
+    SET_NEW_SOFT(state, s) {
+        state.newSoftShow = s;
+    },
+    SET_CURR_COMP(state, comp) {
+        // comp.show = true;
+        state.currComp = comp;
+    },
+    SET_CURR_SOFT(state, soft) {
+        // soft.show = true;
+        state.currSoft = soft;
+    },
     SHOW_NEW_ADDRESS(state, address) {
         state.newAddressSource = address;
     },
@@ -101,7 +120,7 @@ const mutations = {
         state.postOffices.forEach((otd) => {
             let _f = filter;
             for (let k in _f) {
-                console.dir(_f[k]);
+               // console.dir(_f[k]);
                 let res = _f[k](otd);
                 if (res) {
                     if (!state.selectedPostCodeSet.has(otd.postalCode)) {
@@ -121,7 +140,7 @@ const mutations = {
         let arr = [];
         if (state.selectedPO.length > 0) {
             state.selectedPO.forEach(spo => {
-                console.log('state.postOffice');
+               // console.log('state.postOffice');
                 state.postOffices.forEach(el => {
                     if (el.postalCode === spo.postalCode) {
                         arr.push(prepData4ListView(el));
@@ -168,6 +187,7 @@ function prepData4ListView(po) {
             };
             return chld;
         }),
+        comps: po.comps,
         evntsLength: po.evnts.length,
         fixed: false,
         pindx: 0

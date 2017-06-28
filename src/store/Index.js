@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import radar from './modules/radar';
 import po from './modules/po';
 import users from './modules/users';
 import lists from './modules/lists';
@@ -34,6 +35,7 @@ export default new Vuex.Store({
         users,
         po,
         lists,
-        events
+        events,
+        radar
     }
 });

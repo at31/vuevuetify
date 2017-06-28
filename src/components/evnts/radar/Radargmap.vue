@@ -4,14 +4,14 @@
 
 <script>
 
-// import MarkerWithLabel from 'markerwithlabel';
+import MarkerWithLabel from 'markerwithlabel';
 
 var self;
 var map;
-// var MarkerWL;
+var MarkerWL;
 
 export default {
-    name: 'pogmap',
+    name: 'radargmap',
     components: {
     },
     data() {
@@ -32,53 +32,41 @@ export default {
         }
     },
     watch: {
-        selectedPO: function (n, o) {
-            clearMap();
+        preevnts: function (n, o) {
+            console.log(this.mapCenter.status);
+            if (this.mapCenter.status === 'dummy') {
+                clearMap();
             // console.log('n', n);
-            if (n.length > 0) {
-                if (typeof (window.google) === 'object') {
-                    mapRender();
-                } else {
-                    window.addEventListener('gmaploaded', function (e) {
+                if (n.length > 0) {
+                    if (typeof (window.google) === 'object') {
                         mapRender();
-                    }, false);
-                }
-            } else if (n.length === 0) {
+                    } else {
+                        window.addEventListener('gmaploaded', function (e) {
+                            mapRender();
+                        }, false);
+                    }
+                } else if (n.length === 0) {
                 // clearMap();
+                }
             }
         },
-        mapCenter: function (po) {
-            // map.setCenter(new google.maps.LatLng(po.latitude, po.longitude));
-            clearMap();
-            markerRemake(po.postalCode);
-            map.panTo(new window.google.maps.LatLng(po.latitude, po.longitude));
-        },
-        position: function (newAddress) {
-            let geocoder = new google.maps.Geocoder();
-            geocoder.geocode({'address': newAddress}, function (results, status) {
-                if (status === 'OK') {
-                    clearMap();
-                    map.setCenter(results[0].geometry.location);
-                    let marker = new google.maps.Marker({
-                        map: map,
-                        position: results[0].geometry.location
-                    });
-                    self.markers.push(marker);
-                } else {
-                    alert('Geocode was not successful for the following reason: ' + status);
-                }
-            });
+        mapCenter: function (evnt) {
+            if (evnt.status !== 'dummy') {
+                clearMap();
+                markerRemake(evnt.po.postalCode);
+                map.panTo(new window.google.maps.LatLng(evnt.po.latitude, evnt.po.longitude));
+            }
         }
     },
     computed: {
+        preevnts() {
+            return this.$store.state.radar.preevnts;
+        },
         selectedPO() {
-            return this.$store.getters.listPO;
+            return this.$store.getters.preEvntPO;
         },
         mapCenter() {
-            return this.$store.state.po.currPO;
-        },
-        position() {
-            return this.$store.state.po.newAddressSource;
+            return this.$store.state.radar.currEvent;
         }
     },
     methods: {
@@ -87,24 +75,27 @@ export default {
 };
 
 function clearMap() {
+    console.log('clearMap');
     self.markers.forEach(m => {
-        // m.map = null;
+        m.map = null;
         m.setMap(null);
     });
     self.markers = [];
+    console.log('clearMap', self.markers);
 }
 function markerRemake(selectedPostalCode) {
     self.selectedPO.forEach((po, indx) => {
         if (po.postalCode !== selectedPostalCode) {
-           // let _color = 'grey';
-           // let _size = 0.5;
+            let _color = 'grey';
+            let _size = 0.5;
         /* if (po.postalCode === selectedPostalCode) {
             _color = 'red';
             _size = 0.7;
         } */
-/*
+
             let marker = new MarkerWL({
                 position: new google.maps.LatLng(po.latitude, po.longitude),
+            // map: map,
                 draggable: true,
                 raiseOnDrag: true,
                 labelContent: po.label,
@@ -113,13 +104,13 @@ function markerRemake(selectedPostalCode) {
                 labelInBackground: false,
                 icon: pinSymbol(_color, _size),
                 scaledSize: new window.google.maps.Size(50, 50),
+            // animation: window.google.maps.Animation.DROP,
                 postalCode: po.postalCode
             });
 
 
             marker.setMap(map);
             self.markers.push(marker);
-*/
         // console.log(marker);
         } else if (po.postalCode === selectedPostalCode) {
             let marker = new google.maps.Marker({
@@ -128,26 +119,21 @@ function markerRemake(selectedPostalCode) {
                 animation: window.google.maps.Animation.DROP,
                 position: new window.google.maps.LatLng(po.latitude, po.longitude)
             });
-            // marker.setAnimation(window.google.maps.Animation.BOUNCE);
+            marker.setAnimation(window.google.maps.Animation.BOUNCE);
             self.markers.push(marker);
         }
     });
 }
 
 function mapRender() {
-    // MarkerWL = MarkerWithLabel(window.google.maps);
+    MarkerWL = MarkerWithLabel(window.google.maps);
     map = new google.maps.Map(document.getElementById('gmap'), {
         center: {lat: 50.59, lng: 36.58},
         zoom: 12});
-/*
+    // if (self.preevnts.length > 0) {
     self.selectedPO.forEach((po, indx) => {
         var _color = 'skyblue';
-        if (po.evnts.length >= '1') {
-            _color = 'yellow';
-        }
-        if (po.evnts.length >= '3') {
-            _color = 'red';
-        }
+
 
         var marker = new MarkerWL({
             position: new google.maps.LatLng(po.latitude, po.longitude),
@@ -170,9 +156,10 @@ function mapRender() {
         self.markers.push(marker);
         // console.log(marker);
     });
-    */
+    // }
+    console.log('mapRender', self.markers);
 }
-/*
+
 function pinSymbol(color, size) {
     return {
         path: 'M0-48c-9.8 0-17.7 7.8-17.7 17.4 0 15.5 17.7 30.6 17.7 30.6s17.7-15.4 17.7-30.6c0-9.6-7.9-17.4-17.7-17.4z',
@@ -183,7 +170,7 @@ function pinSymbol(color, size) {
         scale: size// 0.5
     };
 }
-*/
+
 
 </script>
 

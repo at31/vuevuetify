@@ -1,5 +1,6 @@
 import axios from 'axios';
 import moment from 'moment';
+
 // initial state
 const state = {
     events: [],
@@ -8,7 +9,8 @@ const state = {
         start: {format: () => {}},
         end: {format: () => {}},
         status: 1,
-        description: ''
+        description: '',
+        socket: ''
     },
     newEvent: {
 

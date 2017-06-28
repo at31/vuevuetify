@@ -1,36 +1,33 @@
-<template>        
+<template>                          
         <v-layout row wrap>
-            <v-flex sm12 md12 xs12>
-                 <v-btn class="ml-2 teal darken-3" @click.native="filterShow=!filterShow" light>
+        <v-btn class="ml-2 teal darken-3" @click.native="filterShow=!filterShow" light>
             <v-icon light class="mr-2">filter_list</v-icon>
             Фильтр
         </v-btn> 
         <v-btn class="ml-2 teal " @click.native="" light>
             <v-icon light class="mr-2">account_balance</v-icon>
             Новое отделение
-        </v-btn>                                 
+        </v-btn>         
+           <v-flex xs12 md12 sm12 class="pb-2 r-position">
+               <pogmap></pogmap> 
             <v-flex md4 class='a-position-l' v-if="filterShow">
                 <pofilter></pofilter>
-           </v-flex>      
-            </v-flex>        
-            <v-flex sm12 md4 xs4>
+           </v-flex>
+            <v-flex sm12 class='a-position'>
                 <polist></polist>
            </v-flex>
-           <v-flex sm12 md4 xs4>
-               <pogmap></pogmap>
-           </v-flex>
-           <v-flex sm12 md4 xs4>
+           <v-flex sm12 class='a-position-r'>
                 <newcard v-if="cardType==='new'"></newcard>
                 <editcard v-if="cardType==='edit'"></editcard>
                 <deletecard v-if="cardType==='delete'"></deletecard>
                 <infocard v-if="cardType==='info'"></infocard>
            </v-flex>
-           
+           </v-flex>
         </v-layout>
 </template>
 
 <script>
-import Pogmap from '@/components/pos/po/PostofficeYMap';
+import Pogmap from '@/components/pos/po/Postofficegmap';
 import Pofilter from '@/components/pos/Postofficesfilter';
 import Polist from '@/components/pos/po/Postofficesselectedlist';
 import Newcard from '@/components/pos/po/PostofficeNewCard';
@@ -52,7 +49,7 @@ export default {
     },
     data() {
         return {
-            filterShow: false // for dev false in production
+            filterShow: true // for dev false in production
         };
     },
     mounted() {
