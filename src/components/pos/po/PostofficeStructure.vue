@@ -3,7 +3,8 @@
 </template>
 
 <script>
-import cytoscape from 'cytoscape';
+// import cytoscape from 'cytoscape';
+import vis from 'vis';
 
 var self;
 
@@ -14,35 +15,18 @@ export default {
     data() {
         return {
             elements: {
-                nodes: [
-                /*
-      {data: {id: 'a1', name: 'a11', type: 'po'}},
-      {data: {id: 'a2', name: 'длинное русское название', type: 'comp'}},
-      {data: {id: 'a3', type: 'soft'}},
-      {data: {id: 'a4', type: 'soft'}},
-      {data: {id: 'a5', type: 'comp'}},
-      {data: {id: 'a6', type: 'comp'}},
-      {data: {id: 'a7', type: 'comp'}},
-      {data: {id: 'a8', type: 'comp'}} */
-                ],
-                edges: [
-                /*
-      {data: {source: 'a1', target: 'a2'}},
-      {data: {source: 'a2', target: 'a3'}},
-      {data: {source: 'a2', target: 'a4'}},
-      {data: {source: 'a1', target: 'a5'}},
-      {data: {source: 'a1', target: 'a6'}},
-      {data: {source: 'a1', target: 'a7'}},
-      {data: {source: 'a1', target: 'a8'}} */
-                ]
+                nodes: '',
+                edges: ''
             },
-            cy: {}
+            options: {},
+            cy: {},
+            vis: ''
         };
     },
     mounted() {
         console.log('cytoscape mounted');
         self = this;
-
+/*
         collectCYElements(this.po);
         this.cy = window.cy = cytoscape({
             container: document.getElementById('cy'),
@@ -114,12 +98,45 @@ export default {
                     break;
             }
         });
+        */
+
+        collectVisDataset(this.po);
+// create a network
+        var container = document.getElementById('cy');
+        this.vis = new vis.Network(container, this.elements, this.options);
+        this.vis.on('click', function (params) {
+            let ndata = self.elements.nodes.get(params.nodes[0]);
+            console.log(ndata);
+            switch (ndata.type) {
+                case 'po':
+                    console.log('po');
+                    break;
+                case 'comp':
+                    ndata.show = true;
+                    self.$store.commit('SET_CURR_SOFT', {show: false});
+                    self.$store.commit('SET_CURR_COMP', ndata);
+                    self.$store.commit('SET_NEW_COMP', {show: false});
+                    self.$store.commit('SET_NEW_SOFT', {show: false});
+                    break;
+                case 'soft':
+                    ndata.show = true;
+                    self.$store.commit('SET_CURR_COMP', {show: false});
+                    self.$store.commit('SET_CURR_SOFT', ndata);
+                    self.$store.commit('SET_NEW_COMP', {show: false});
+                    self.$store.commit('SET_NEW_SOFT', {show: false});
+                    break;
+            }
+        });
     },
     beforeDestroy() {
+        /*
         this.cy.off('grabon');
         this.cy.destroy();
         this.cy = null;
         this.elements = null;
+        */
+        this.elements = null;
+        this.vis.destroy();
         console.log('beforeDestroy');
     },
     watch: {
@@ -139,6 +156,28 @@ export default {
     }
 };
 
+function collectVisDataset(npo) {
+    self.elements.nodes = [];
+    self.elements.edges = [];
+    self.elements.nodes.push({id: npo.postalCode, label: npo.postalCode, type: 'po', shape: 'image', image: '../static/po.svg'});
+    npo.comps.forEach(comp => {
+        let node = {id: comp.id, type: 'comp', label: comp.title, description: comp.description, shape: 'image', image: '../static/comp.svg'};
+        let edge = {from: comp.id, to: npo.postalCode};
+        self.elements.nodes.push(node);
+        self.elements.edges.push(edge);
+        comp.soft.forEach(app => {
+            let node = {id: app.id, type: 'soft', label: app.title, description: app.description, compname: comp.title, shape: 'image', image: '../static/soft.svg'};
+            let edge = {from: app.id, to: comp.id};
+            self.elements.nodes.push(node);
+            self.elements.edges.push(edge);
+        });
+    });
+    self.elements.nodes = new vis.DataSet(self.elements.nodes);
+    self.elements.edges = new vis.DataSet(self.elements.edges);
+    console.log(self.elements);
+}
+
+/*
 function collectCYElements(npo) {
     console.log('npo');
     self.elements.nodes.push({data: {id: npo.postalCode, name: npo.postalCode, type: 'po'}});
@@ -156,7 +195,7 @@ function collectCYElements(npo) {
     });
     console.log('npo', self.elements);
 }
-
+*/
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

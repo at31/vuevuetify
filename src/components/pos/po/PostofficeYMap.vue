@@ -11,13 +11,13 @@ var self;
 // var MarkerWL;
 
 export default {
-    name: 'pogmap',
+    name: 'poYmap',
     components: {
     },
     data() {
         return {
             mymap: {},
-            markers: []
+            geoCollection: {removeAll: function () { return true; }}
         };
     },
     mounted() {
@@ -35,7 +35,18 @@ export default {
 
         },
         mapCenter: function (po) {
-
+            self.geoCollection.removeAll();
+            self.geoCollection = null;
+            let pmark = new ymaps.Placemark([po.latitude, po.longitude], {
+                balloonContent: '<strong>' + po.postalCode + '</strong>'
+            }, {
+                preset: 'islands#dotIcon'
+            // iconColor: '#735184'
+            });
+            self.geoCollection = new ymaps.GeoObjectCollection();
+            self.geoCollection.add(pmark);
+            self.mymap.setCenter([po.latitude, po.longitude]);
+            self.mymap.geoObjects.add(self.geoCollection);
         },
         position: function (newAddress) {}
 
