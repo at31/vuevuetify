@@ -14,7 +14,7 @@
 
 <script>
 import Eventpolist from '@/components/evnts/Eventspolist';
-import Pathgmap from '@/components/evnts/Pathgmap';
+import Pathgmap from '@/components/evnts/PathYmap';
 import Listnewcard from '@/components/lists/Listnewcard';
 
 export default {

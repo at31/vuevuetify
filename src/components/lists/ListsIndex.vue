@@ -25,7 +25,7 @@ import Listslist from './ListsAll';
 import Listinfo from './ListInfo';
 import Listedit from './ListEdit';
 import Listdelete from './ListDelete';
-import Pathgmap from './ListPathGMap';
+import Pathgmap from './ListPathYMap';
 
 
 export default {

@@ -37,7 +37,6 @@ const actions = {
         axios.get('http://127.0.0.1:3000/po/all').then(response => {
             if (response.status === 200) {
                 context.commit('PO_LOADED', response.data);
-                console.log(response.data);
             }
         }).catch(err => {
             console.log(err);
@@ -73,15 +72,12 @@ const mutations = {
         state.newAddressSource = address;
     },
     CARD_TYPE_PO(state, type) {
-        console.log('po card type = ' + type);
         state.poCardType = type;
     },
     SHOW_PO_DIALOG(state, st) {
-        console.log('show-po-dialog', st);
         state.showPODialog = st;
     },
     SET_CURR_PO(state, po) {
-        console.log('set-curr-po', po);
         state.currPO = po;
     },
     EVNT_REMOVE_FROM_LIST(state, {po, event, indx}) {
@@ -150,7 +146,6 @@ const mutations = {
         } else {
             arr = pos.map((otd) => prepData4ListView(otd));
         }
-
         state.selectedPO = arr;
     }
 };

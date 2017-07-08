@@ -122,6 +122,7 @@ const actions = {
 
                     const path = [];
                     list.path.forEach(_postalCode => {
+                        console.log('_postalCode', context.rootState.po.postOffices);
                         context.rootState.po.postOffices.forEach(po => {
                             if (po.postalCode === _postalCode) {
                                 path.push(po);

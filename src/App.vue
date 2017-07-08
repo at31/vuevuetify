@@ -62,9 +62,9 @@
     </v-toolbar>
     <main>
       <v-container fluid>
-        <v-slide-y-transition mode="out-in">
+        <!--v-slide-y-transition mode="out-in"-->
           <router-view></router-view>
-        </v-slide-y-transition>
+        <!--/v-slide-y-transition-->
 
       <v-snackbar
       :timeout="3000"
@@ -155,7 +155,7 @@ export default {
     beforeRouteEnter(to, from, next) {
         console.log(to, from, next);
     },
-    mounted() {
+    beforeCreate() {
         this.$store.dispatch('loadAllPO');
         this.$store.dispatch('getUsers');
           // this.$store.dispatch('loadAllPO');

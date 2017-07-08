@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import Pogmap from '@/components/pos/Postofficegmap';
+import Pogmap from '@/components/pos/PostofficeYmap';
 import Pofilter from '../pos/Postofficesfilter';
 import Polist from '../pos/Postofficesselectedlist';
 

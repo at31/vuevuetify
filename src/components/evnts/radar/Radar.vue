@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Pogmap from '@/components/evnts/radar/Radargmap';
+import Pogmap from '@/components/evnts/radar/RadarYmap';
 import Pofilter from '@/components/evnts/radar/Filter';
 import Preevntlist from './PreevntList';
 import Eventeditcard from '@/components/evnts/radar/Eventeditcard';

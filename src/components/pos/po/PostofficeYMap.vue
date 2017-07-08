@@ -6,9 +6,8 @@
 
 // import MarkerWithLabel from 'markerwithlabel';
 
-var self;
-// var map;
-// var MarkerWL;
+let mymap = {};
+let geoCollection = {removeAll: function () { return true; }};
 
 export default {
     name: 'poYmap',
@@ -16,50 +15,57 @@ export default {
     },
     data() {
         return {
-            mymap: {},
-            geoCollection: {removeAll: function () { return true; }}
+
         };
     },
     mounted() {
-        console.log('ymap mounted');
-        self = this;
-        if (typeof (window.ymaps) === 'object') {
+        if (window.ymapsloaded) {
             mapRender();
+        } else {
+            window.addEventListener('ymapsloaded', function (e) {
+                mapRender();
+            }, false);
         }
     },
     beforeDestroy() {
-        self.mymap.destroy();
+        console.log('beforeDestroy PostofficeYMap.vue');
+        geoCollection.removeAll();
+        // geoCollection = null;
+        mymap.destroy();
+        mymap = null;
     },
     watch: {
-        selectedPO: function (n, o) {
-
-        },
-        mapCenter: function (po) {
-            self.geoCollection.removeAll();
-            self.geoCollection = null;
-            let pmark = new ymaps.Placemark([po.latitude, po.longitude], {
-                balloonContent: '<strong>' + po.postalCode + '</strong>'
+        poCardType: function (pct) {
+            let color = 'islands#darkGreenStretchyIcon';
+            if (pct === 'edit') {
+                color = 'islands#nightStretchyIcon';
+            }
+            if (pct === 'delete') {
+                color = 'islands#redStretchyIcon';
+            }
+            geoCollection.removeAll();
+            geoCollection = null;
+            let pmark = new ymaps.Placemark([this.currPO.latitude, this.currPO.longitude], {
+                balloonContent: '<strong>' + this.currPO.postalCode + '</strong>',
+                iconContent: '<strong>' + this.currPO.postalCode + '</strong>',
+                hintContent: '<strong>' + this.currPO.addressSource + '</strong>'
             }, {
-                preset: 'islands#dotIcon'
+                preset: color
             // iconColor: '#735184'
             });
-            self.geoCollection = new ymaps.GeoObjectCollection();
-            self.geoCollection.add(pmark);
-            self.mymap.setCenter([po.latitude, po.longitude]);
-            self.mymap.geoObjects.add(self.geoCollection);
-        },
-        position: function (newAddress) {}
+            geoCollection = new ymaps.GeoObjectCollection();
+            geoCollection.add(pmark);
+            mymap.setCenter([this.currPO.latitude, this.currPO.longitude]);
+            mymap.geoObjects.add(geoCollection);
+        }
 
     },
     computed: {
-        selectedPO() {
-            return this.$store.getters.listPO;
+        poCardType() {
+            return this.$store.state.po.poCardType;
         },
-        mapCenter() {
+        currPO() {
             return this.$store.state.po.currPO;
-        },
-        position() {
-            return this.$store.state.po.newAddressSource;
         }
     },
     methods: {
@@ -69,14 +75,10 @@ export default {
 
 
 function mapRender() {
-    window.ymaps.ready(() => {
-        console.log('map loaded');
-        self.mymap = new window.ymaps.Map('ymap', {
-            center: [50.59, 36.58],
-            zoom: 10,
-            controls: ['routeEditor']
-        });
-       // setMark();
+    console.log('mapRender');
+    mymap = new window.ymaps.Map('ymap', {
+        center: [50.59, 36.58],
+        zoom: 10
     });
 }
 
