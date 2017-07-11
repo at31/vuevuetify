@@ -108,7 +108,7 @@ export default {
     },
     methods: {
         confirmNewBtn() {
-          // delete
+            this.$store.dispatch('updatePO', this.po);
         },
         showAddress() {
             this.$store.commit('SHOW_NEW_ADDRESS', this.po.addressSource);

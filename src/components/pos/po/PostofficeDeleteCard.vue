@@ -98,7 +98,7 @@ export default {
     },
     methods: {
         confirmNewBtn() {
-          // delete
+            this.$store.dispatch('deletePO', this.po);
         },
         goDetailView() {
             this.$router.push({

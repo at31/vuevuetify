@@ -33,6 +33,45 @@ const getters = {
 
 // actions
 const actions = {
+    newPO(context, po) {
+        axios.post('http://127.0.0.1:3000/po/new', po).then(response => {
+            if (response.status === 200) {
+                context.dispatch('loadAllPO');
+                ontext.commit('INFO_SNACKBAR', {show: true, context: 'success',
+                    text: 'Отделение добвлено успешно'});
+            }
+        }).catch(err => {
+            console.log('ошибка добавления отделения $err', err);
+            context.commit('INFO_SNACKBAR', {show: true, context: 'error',
+                text: 'ошибка добавления отделения'});
+        });
+    },
+    updatePO(context, po) {
+        axios.post('http://127.0.0.1:3000/po/update', po).then(response => {
+            if (response.status === 200) {
+                context.dispatch('loadAllPO');
+                ontext.commit('INFO_SNACKBAR', {show: true, context: 'success',
+                    text: 'Отделение обновлено успешно'});
+            }
+        }).catch(err => {
+            console.log('ошибка обновления отделения $err', err);
+            context.commit('INFO_SNACKBAR', {show: true, context: 'error',
+                text: 'ошибка обновления отделения'});
+        });
+    },
+    deletePO(context, po) {
+        axios.post('http://127.0.0.1:3000/po/del', po).then(response => {
+            if (response.status === 200) {
+                context.dispatch('loadAllPO');
+                ontext.commit('INFO_SNACKBAR', {show: true, context: 'success',
+                    text: 'Отделение удалено успешно'});
+            }
+        }).catch(err => {
+            console.log('ошибка удаления отделения $err', err);
+            context.commit('INFO_SNACKBAR', {show: true, context: 'error',
+                text: 'ошибка удаления отделения'});
+        });
+    },
     loadAllPO(context) {
         axios.get('http://127.0.0.1:3000/po/all').then(response => {
             if (response.status === 200) {
