@@ -23,8 +23,35 @@ const actions = {
         axios.get('http://127.0.0.1:3000/users/all').then(response => {
             if (response.status === 200) {
                 context.commit('USERS_LOADED', response.data.map((usr) => {
-                    usr.selected = false;
-                    usr.text = usr.fio; // for vuetify select "Item object is required to have a text property"
+                    // исключаем свойства из видимости для for in...
+                    Object.defineProperty(usr, 'selected', {
+                        value: false,
+                        enumerable: false
+                    });
+                    Object.defineProperty(usr, 'text', {
+                        value: usr.fio,
+                        enumerable: false
+                    }); // for vuetify select "Item object is required to have a text property"
+                    Object.defineProperty(usr, '_id', {
+                        enumerable: false,
+                        configurable: false
+                    });
+                    // отмечаем дефолтные по согласованию с заказчиком при разработке модели свойства как неизменяемые
+                    Object.defineProperty(usr, 'email', {
+                        configurable: false
+                    });
+                    Object.defineProperty(usr, 'pass', {
+                        configurable: false
+                    });
+                    Object.defineProperty(usr, 'role', {
+                        configurable: false
+                    });
+                    Object.defineProperty(usr, 'login', {
+                        configurable: false
+                    });
+                    Object.defineProperty(usr, 'fio', {
+                        configurable: false
+                    });
                     return usr;
                 }));
                 // context.dispatch('getListsAll');

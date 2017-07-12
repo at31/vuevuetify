@@ -20,7 +20,7 @@
 
         <v-layout row>
           <v-flex xs4>
-            <v-subheader>Лоин</v-subheader>
+            <v-subheader>Логин</v-subheader>
           </v-flex>
           <v-flex xs8>
             <v-text-field
