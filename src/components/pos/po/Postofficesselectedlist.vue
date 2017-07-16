@@ -13,7 +13,7 @@
                 <v-icon>local_post_office</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
-                <v-list-tile-title>Индекс: {{ po.postalCode }}</v-list-tile-title>
+                <v-list-tile-title>Индекс: {{ po.postalCode.value }}</v-list-tile-title>
                 <v-list-tile-sub-title class="grey--text text--darken-4">заданий: 
                 <v-chip >
       {{ po.evntsLength }}

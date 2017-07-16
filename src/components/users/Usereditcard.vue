@@ -65,7 +65,7 @@
             };
         },
         mounted() {
-            this.newUser = Object.assign({}, this.currUser);
+            // this.newUser = Object.assign({}, this.currUser);
             for (let prop in this.currUser) {
                 let conf = Object.getOwnPropertyDescriptor(this.currUser, prop);
                 this.userProps.push(
@@ -97,11 +97,13 @@
         },
         methods: {
             confirmEditBtn() {
+                const _user = {};
                 this.userProps.forEach(prop => {
-                    this.newUser[prop.name] = prop.value;
+                    console.log(prop.name);
+                    _user[prop.name] = prop.value;
                 });
-                this.newUser._id = this.currUser._id;
-                this.$store.dispatch('updateUser', this.newUser);
+                _user._id = this.currUser._id;
+                this.$store.dispatch('updateUser', _user);
             },
             addNewProp() {
                 this.userProps.push({name: 'название свойства', value: 'значение свойства', conf: true});

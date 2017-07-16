@@ -198,14 +198,14 @@ export default {
 
 function prepData4ListView(po) {
     const listel = {
-        id: po._id,
-        label: po.postalCode,
-        postalCode: po.postalCode,
-        latitude: po.latitude,
-        longitude: po.longitude,
-        addressSource: po.addressSource,
-        region: po.region,
-        settlement: po.settlement,
+        id: {value: po._id, title: 'id'},
+        label: {value: po.postalCode, title: 'Название'},
+        postalCode: {value: po.postalCode, title: 'Индекс'},
+        latitude: {value: po.latitude, title: 'Широта'},
+        longitude: {value: po.longitude, title: 'Долгота'},
+        addressSource: {value: po.addressSource, title: 'Адрес'},
+        region: {value: po.region, title: 'Регион'},
+        settlement: {value: po.settlement, title: 'Город'},
         evnts: po.evnts.map((o) => {
             const chld = {
                 id: o._id,
@@ -226,6 +226,47 @@ function prepData4ListView(po) {
         fixed: false,
         pindx: 0
     };
+    Object.defineProperty(listel, 'id', {
+        enumerable: false,
+        configurable: false
+    });
+    Object.defineProperty(listel, 'evnts', {
+        enumerable: false
+    });
+    Object.defineProperty(listel, 'comps', {
+        enumerable: false
+    });
+    Object.defineProperty(listel, 'evntsLength', {
+        enumerable: false
+    });
+    Object.defineProperty(listel, 'fixed', {
+        enumerable: false
+    });
+    Object.defineProperty(listel, 'pindx', {
+        enumerable: false
+    });
+
+    Object.defineProperty(listel, 'label', {
+        configurable: false
+    });
+    Object.defineProperty(listel, 'postalCode', {
+        configurable: false
+    });
+    Object.defineProperty(listel, 'latitude', {
+        configurable: false
+    });
+    Object.defineProperty(listel, 'longitude', {
+        configurable: false
+    });
+    Object.defineProperty(listel, 'addressSource', {
+        configurable: false
+    });
+    Object.defineProperty(listel, 'region', {
+        configurable: false
+    });
+    Object.defineProperty(listel, 'settlement', {
+        configurable: false
+    });
 
     return listel;
 }
