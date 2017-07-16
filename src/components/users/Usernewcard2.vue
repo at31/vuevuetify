@@ -20,13 +20,7 @@
             ></v-text-field>
           </v-flex>
           <v-flex xs7>
-            <v-text-field v-if="!prop.conf"
-              name=""
-              label=""
-              id=""
-              v-model="prop.value" readonly
-            ></v-text-field>
-            <v-text-field v-if="prop.conf"
+            <v-text-field
               name=""
               label=""
               id=""
@@ -59,26 +53,18 @@
         name: 'userNewCard',
         data() {
             return {
-                newUser: {
-                    _id: '', pass: '', fio: '', login: '', email: ''
-                },
+                newUser: {},
                 userProps: []
             };
         },
         mounted() {
-            console.log(this.currUser);
-            this.newUser = Object.assign({}, this.currUser);
-            for (let prop in this.currUser) {
-                let conf = Object.getOwnPropertyDescriptor(this.currUser, prop);
-                console.log('conf.configurable', conf.configurable);
-                this.userProps.push(
-                    {
-                        name: prop,
-                        value: this.currUser[prop],
-                        conf: conf.configurable
-                    });
-            }
-            console.log(this.userProps);
+            this.userProps = [
+              {name: 'email', value: '', conf: false},
+              {name: 'pass', value: '', conf: false},
+              {name: 'login', value: '', conf: false},
+              {name: 'role', value: '', conf: false},
+              {name: 'fio', value: '', conf: false}
+            ];
         },
         watch: {
             currUser: function (n, o) {
@@ -92,10 +78,13 @@
         },
         methods: {
             confirmNewBtn() {
+                this.userProps.forEach(prop => {
+                    this.newUser[prop.name] = prop.value;
+                });
                 this.$store.dispatch('saveNewUser', this.newUser);
             },
             addNewProp() {
-                this.userProps.push({name: 'new one', value: 'vlaue of new one', conf: true});
+                this.userProps.push({name: 'название свойства', value: 'занчение свойства', conf: true});
             },
             deleteProp(indx) {
                 console.log('deleteProp $indx', indx);

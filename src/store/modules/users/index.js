@@ -64,7 +64,7 @@ const actions = {
         context.commit('CARD_TYPE', 'none');
         axios.post('http://127.0.0.1:3000/users/new', user)
             .then(response => {
-                console.log('user deleted $response', response);
+                console.log('user new $response', response);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success', text: 'Новый пользователь создан'});
                 context.dispatch('getUsers');
             }).catch(err => {
@@ -76,7 +76,7 @@ const actions = {
         context.commit('CARD_TYPE', 'none');
         axios.post('http://127.0.0.1:3000/users/update', user)
             .then(response => {
-                console.log('user deleted $response', response);
+                console.log('user update $response', response);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success', text: 'Пользователь обновлен'});
                 context.dispatch('getUsers');
             }).catch(err => {

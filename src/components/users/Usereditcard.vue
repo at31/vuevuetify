@@ -4,67 +4,49 @@
     <v-card-title><span class="">Редактирование пользователя</span></v-card-title>
             </v-card-row>
     <v-card-text>
-        <h4>_id: {{currUser._id}}</h4>
-        <v-layout row>
+        <v-layout row v-for="(prop, indx) in userProps" :key="prop.id">
           <v-flex xs4>
-            <v-subheader>e-mail</v-subheader>
-          </v-flex>
-          <v-flex xs8>
-            <v-text-field
-              name="emailInput"
-              label="e-mail"
-              id="email"
-              v-model="newUser.email"
+            <v-text-field v-if="!prop.conf"
+              name=""
+              label=""
+              id=""
+              v-model="prop.name" readonly
+            ></v-text-field>
+            <v-text-field v-if="prop.conf"
+              name=""
+              label=""
+              id=""
+              v-model="prop.name" 
             ></v-text-field>
           </v-flex>
-        </v-layout>
-
-        <v-layout row>
-          <v-flex xs4>
-            <v-subheader>Лоин</v-subheader>
-          </v-flex>
-          <v-flex xs8>
-            <v-text-field
-              name="loginInput"
-              label="Логин"
-              id="login"
-              v-model="newUser.login"
+          <v-flex xs7>
+            <v-text-field v-if="!prop.conf"
+              name=""
+              label=""
+              id=""
+              v-model="prop.value" 
+            ></v-text-field>
+            <v-text-field v-if="prop.conf"
+              name=""
+              label=""
+              id=""
+              v-model="prop.value" 
             ></v-text-field>
           </v-flex>
-        </v-layout>
-
-        
-        <v-layout row>
-          <v-flex xs4>
-            <v-subheader>ФИО</v-subheader>
-          </v-flex>
-          <v-flex xs8>
-            <v-text-field
-              name="fioInput"
-              label="ФИО"
-              id="fio"
-              v-model="newUser.fio"
-            ></v-text-field>
-          </v-flex>
-        </v-layout>
-
-        <v-layout row>
-          <v-flex xs4>
-            <v-subheader>Пароль</v-subheader>
-          </v-flex>
-          <v-flex xs8>
-            <v-text-field
-              name="passInput"
-              label="Пароль"
-              id="pass"
-              v-model="newUser.pass"
-            ></v-text-field>
+          <v-flex xs1>
+              <v-btn icon class="red--text text--darken-4" @click.native="deleteProp(indx)" v-show="prop.conf">
+                  <v-icon>delete</v-icon>
+                </v-btn>       
           </v-flex>
         </v-layout>
 
     </v-card-text>        
             <v-divider></v-divider>
         <v-card-row actions>
+        <v-btn @click.native="addNewProp" success light class="mr-2 green ">
+            <v-icon light>add</v-icon>
+            Добавить свойство
+        </v-btn>        
         <v-btn @click.native="confirmEditBtn" info light>
             <v-icon light>done</v-icon>
             Подтвердить изменения
@@ -78,17 +60,34 @@
         name: 'userEditCard',
         data() {
             return {
-                newUser: {
-                    _id: '', pass: '', fio: '', login: '', email: ''
-                }
+                newUser: {},
+                userProps: []
             };
         },
         mounted() {
             this.newUser = Object.assign({}, this.currUser);
+            for (let prop in this.currUser) {
+                let conf = Object.getOwnPropertyDescriptor(this.currUser, prop);
+                this.userProps.push(
+                    {
+                        name: prop,
+                        value: this.currUser[prop],
+                        conf: conf.configurable
+                    });
+            }
         },
         watch: {
-            currUser: function (n, o) {
-                this.newUser = Object.assign({}, n);
+            currUser: function (n) {
+                this.userProps = [];
+                for (let prop in n) {
+                    let conf = Object.getOwnPropertyDescriptor(n, prop);
+                    this.userProps.push(
+                        {
+                            name: prop,
+                            value: n[prop],
+                            conf: conf.configurable
+                        });
+                }
             }
         },
         computed: {
@@ -98,7 +97,18 @@
         },
         methods: {
             confirmEditBtn() {
+                this.userProps.forEach(prop => {
+                    this.newUser[prop.name] = prop.value;
+                });
+                this.newUser._id = this.currUser._id;
                 this.$store.dispatch('updateUser', this.newUser);
+            },
+            addNewProp() {
+                this.userProps.push({name: 'название свойства', value: 'значение свойства', conf: true});
+            },
+            deleteProp(indx) {
+                console.log('deleteProp $indx', indx);
+                this.userProps.splice(indx, 1);
             }
         }
     };
