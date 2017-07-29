@@ -72,9 +72,9 @@ const actions = {
                 context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка создания пользователя'});
             });
     },
-    updateUser(context, user) {
+    updateUser(context, _user) {
         context.commit('CARD_TYPE', 'none');
-        axios.post('http://127.0.0.1:3000/users/update', user)
+        axios.post('http://127.0.0.1:3000/users/update', _user)
             .then(response => {
                 console.log('user update $response', response);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success', text: 'Пользователь обновлен'});

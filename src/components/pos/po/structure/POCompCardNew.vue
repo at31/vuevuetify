@@ -3,23 +3,7 @@
       <v-card-row v-bind:class="{green: true, 'lighten-3': true}">
          <v-card-title><span class="">ПО новое</span></v-card-title>
       </v-card-row>
-      <v-card-text >
-
-         <v-layout row>
-          <v-flex xs4>
-            <v-subheader>Где установлено</v-subheader>
-          </v-flex>
-          <v-flex xs8>
-            <v-select
-              v-bind:items="comps"
-              v-model="newSoft.comp"
-              label="Выберите место установки"
-              dark
-              single-line
-              
-            ></v-select>
-          </v-flex>
-        </v-layout>
+      <v-card-text >         
         
         <v-layout row>
             <v-flex xs4>
@@ -31,7 +15,7 @@
                   label="ID"
                   id="id"
                   prepend-icon="dvr"
-                  v-model="newSoft.id" 
+                  v-model="newComp.id" 
                   ></v-text-field>
             </v-flex>
          </v-layout>
@@ -45,7 +29,7 @@
                   label="Название"
                   id="title"
                   prepend-icon="dvr"
-                  v-model="newSoft.title" 
+                  v-model="newComp.title" 
                   ></v-text-field>
             </v-flex>
          </v-layout>
@@ -59,17 +43,44 @@
                   label="Описание"
                   id="description"
                   prepend-icon="dvr"
-                  v-model="newSoft.description"
+                  v-model="newComp.description"
 
                   ></v-text-field>
             </v-flex>
          </v-layout>
+         <v-layout row v-for="(prop, indx) in addPrms" :key="prop.id">
+           <v-flex xs2>
+           <v-text-field                  
+                  v-model="prop.name" 
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.title" 
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.value" 
+                  ></v-text-field>         
+         </v-flex>
+         <v-flex xs1>
+              <v-btn icon class="red--text text--darken-4" @click.native="deleteProp(indx)">
+                  <v-icon>delete</v-icon>
+                </v-btn>       
+          </v-flex>
+        </v-layout> 
+      </v-card-text>
                                  
       </v-card-text>
  
 
       <v-divider></v-divider>
       <v-card-row actions>
+          <v-btn @click.native="addNewProp" success light class="mr-2 green ">
+            <v-icon light>add</v-icon>
+            Добавить свойство
+        </v-btn>  
              <v-btn @click.native="confirmNewBtn" success light >
             <v-icon light>done</v-icon>
             Сохранить
@@ -81,19 +92,20 @@
 import moment from 'moment';
 
 moment().locale('ru');
-let self = '';
+// let self = '';
 export default {
     name: 'eventdetail',
     data() {
         return {
-            newSoft: {}
+            newComp: {},
+            addPrms: []
         };
     },
     mounted() {
-        self = this;
+        // self = this;
     },
     watch: {
-        'newSoft.comp': function (cid) {
+        'newComp.comp': function (cid) {
             alert('new soft comp selected');
         }
     },
@@ -110,13 +122,23 @@ export default {
     },
     methods: {
         confirmNewBtn() {
-            this.po.comps.forEach(c => {
-                if (c.id === self.newSoft.comp.id) {
-                    c.soft.push({id: self.newSoft.id, title: self.newSoft.title, description: self.newSoft.description});
-                }
-            });
+            this.po.comps.push(
+                {
+                    id: this.newComp.id,
+                    title: this.newComp.title,
+                    description: this.newComp.description,
+                    addedprms: this.addPrms,
+                    soft: []
+                });
+
             this.$store.commit('SET_CURR_PO', Object.assign({}, this.po));
             console.log('new soft ', this.po);
+        },
+        addNewProp() {
+            this.addPrms.push({name: '', title: '', value: ''});
+        },
+        deleteProp(indx) {
+            this.addPrms.splice(indx, 1);
         }
     }
 };

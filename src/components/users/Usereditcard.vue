@@ -97,9 +97,8 @@
         },
         methods: {
             confirmEditBtn() {
-                const _user = {};
+                let _user = {};
                 this.userProps.forEach(prop => {
-                    console.log(prop.name);
                     _user[prop.name] = prop.value;
                 });
                 _user._id = this.currUser._id;

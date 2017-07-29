@@ -99,14 +99,13 @@ export default {
             }
         });
         */
-
+        console.log('vis po', this.po);
         collectVisDataset(this.po);
 // create a network
         var container = document.getElementById('cy');
         this.vis = new vis.Network(container, this.elements, this.options);
         this.vis.on('click', function (params) {
             let ndata = self.elements.nodes.get(params.nodes[0]);
-            console.log(ndata);
             switch (ndata.type) {
                 case 'po':
                     console.log('po');
@@ -144,11 +143,40 @@ export default {
            // console.log('change soft');
             // collectCYElements(this.po);
             // this.cy.add(this.elements);
+            // this.elements = null;
+            this.vis.destroy();
+            collectVisDataset(this.po);
+// create a network
+            var container = document.getElementById('cy');
+            this.vis = new vis.Network(container, this.elements, this.options);
+            this.vis.on('click', function (params) {
+                let ndata = self.elements.nodes.get(params.nodes[0]);
+                switch (ndata.type) {
+                    case 'po':
+                        console.log('po');
+                        break;
+                    case 'comp':
+                        ndata.show = true;
+                        self.$store.commit('SET_CURR_SOFT', {show: false});
+                        self.$store.commit('SET_CURR_COMP', ndata);
+                        self.$store.commit('SET_NEW_COMP', {show: false});
+                        self.$store.commit('SET_NEW_SOFT', {show: false});
+                        break;
+                    case 'soft':
+                        ndata.show = true;
+                        self.$store.commit('SET_CURR_COMP', {show: false});
+                        self.$store.commit('SET_CURR_SOFT', ndata);
+                        self.$store.commit('SET_NEW_COMP', {show: false});
+                        self.$store.commit('SET_NEW_SOFT', {show: false});
+                        break;
+                }
+            });
         }
     },
     computed: {
         po() {
-            return Object.assign({}, this.$store.state.po.currPO);
+            // return Object.assign({}, this.$store.state.po.currPO);
+            return this.$store.state.po.currPO;
         }
     },
     methods: {
@@ -161,7 +189,7 @@ function collectVisDataset(npo) {
     self.elements.edges = [];
     self.elements.nodes.push({id: npo.postalCode, label: npo.postalCode, type: 'po', shape: 'image', image: '../static/po.svg'});
     npo.comps.forEach(comp => {
-        let node = {id: comp.id, type: 'comp', label: comp.title, description: comp.description, shape: 'image', image: '../static/comp.svg'};
+        let node = {id: comp.id, type: 'comp', label: comp.title, description: comp.description, shape: 'image', image: '../static/comp.svg', addedprms: comp.addedprms};
         let edge = {from: comp.id, to: npo.postalCode};
         self.elements.nodes.push(node);
         self.elements.edges.push(edge);
@@ -174,7 +202,6 @@ function collectVisDataset(npo) {
     });
     self.elements.nodes = new vis.DataSet(self.elements.nodes);
     self.elements.edges = new vis.DataSet(self.elements.edges);
-    console.log(self.elements);
 }
 
 /*

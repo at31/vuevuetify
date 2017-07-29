@@ -6,14 +6,14 @@
         </v-card-title>
     </v-card-row>
     <v-list three-line class="polist">
-          <v-list-item v-for="(po, index) in selectedPO" v-bind:key="po._id">
+          <v-list-item v-for="(po, index) in selectedPO" v-bind:key="po.id">
             <v-list-tile avatar>
               <v-list-tile-action>
                 <!--v-checkbox v-model="po.fixed" @change="fixedPO(po)"></v-checkbox-->
                 <v-icon>local_post_office</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
-                <v-list-tile-title>Индекс: {{ po.postalCode.value }}</v-list-tile-title>
+                <v-list-tile-title>Индекс: {{ po.postalCode }}</v-list-tile-title>
                 <v-list-tile-sub-title class="grey--text text--darken-4">заданий: 
                 <v-chip >
       {{ po.evntsLength }}
@@ -64,7 +64,6 @@ export default {
         };
     },
     mounted() {
-
     },
     watch: {
         selectedPO: function (n, o) {

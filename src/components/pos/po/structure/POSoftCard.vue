@@ -28,7 +28,7 @@
                   label="Название"
                   id="title"
                   prepend-icon="dvr"
-                  v-model="soft.title" 
+                  v-model="soft.label" 
                   ></v-text-field>
             </v-flex>
          </v-layout>
@@ -96,6 +96,12 @@
       </v-card-text>  
 
       <v-divider></v-divider>
+      <v-card-row actions actions v-if="edit">
+          <v-btn @click.native="addNewProp" success light class="mr-2 green ">
+            <v-icon light>add</v-icon>
+            Добавить свойство
+        </v-btn>  
+      </v-card-row>
       <v-card-row actions v-if="edit">
              <v-btn @click.native="confirmChngBtn" primary light >
             <v-icon light>done</v-icon>

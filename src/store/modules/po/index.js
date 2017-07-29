@@ -8,8 +8,8 @@ const state = {
     currPO: {
         label: '',
         postalCode: '',
-        latitude: '',
-        longitude: '',
+        latitude: 50.59,
+        longitude: 36.58,
         addressSource: '',
         region: '',
         settlement: '',
@@ -23,7 +23,7 @@ const state = {
     newCompShow: {show: false},
     newSoftShow: {show: false}
 };
-
+// console.log('index');
 // getters
 const getters = {
     listPO: state => {
@@ -37,7 +37,7 @@ const actions = {
         axios.post('http://127.0.0.1:3000/po/new', po).then(response => {
             if (response.status === 200) {
                 context.dispatch('loadAllPO');
-                ontext.commit('INFO_SNACKBAR', {show: true, context: 'success',
+                context.commit('INFO_SNACKBAR', {show: true, context: 'success',
                     text: 'Отделение добвлено успешно'});
             }
         }).catch(err => {
@@ -50,7 +50,7 @@ const actions = {
         axios.post('http://127.0.0.1:3000/po/update', po).then(response => {
             if (response.status === 200) {
                 context.dispatch('loadAllPO');
-                ontext.commit('INFO_SNACKBAR', {show: true, context: 'success',
+                context.commit('INFO_SNACKBAR', {show: true, context: 'success',
                     text: 'Отделение обновлено успешно'});
             }
         }).catch(err => {
@@ -63,7 +63,7 @@ const actions = {
         axios.post('http://127.0.0.1:3000/po/del', po).then(response => {
             if (response.status === 200) {
                 context.dispatch('loadAllPO');
-                ontext.commit('INFO_SNACKBAR', {show: true, context: 'success',
+                context.commit('INFO_SNACKBAR', {show: true, context: 'success',
                     text: 'Отделение удалено успешно'});
             }
         }).catch(err => {
@@ -186,6 +186,13 @@ const mutations = {
             arr = pos.map((otd) => prepData4ListView(otd));
         }
         state.selectedPO = arr;
+        if (state.currPO.postalCode !== '') {
+            state.currPO = state.selectedPO.find(po => {
+                if (state.currPO.postalCode === po.postalCode) {
+                    return po;
+                }
+            });
+        }
     }
 };
 
@@ -197,6 +204,37 @@ export default {
 };
 
 function prepData4ListView(po) {
+    const listel = {
+        id: po._id,
+        label: po.postalCode,
+        postalCode: po.postalCode,
+        latitude: po.latitude,
+        longitude: po.longitude,
+        addressSource: po.addressSource,
+        region: po.region,
+        settlement: po.settlement,
+        evnts: po.evnts.map((o) => {
+            const chld = {
+                id: o._id,
+                label: o.title,
+                title: o.title,
+                start: moment(o.start),
+                end: moment(o.end),
+                postalCode: o.postalCode,
+                status: o.status,
+                description: o.description,
+                executor: o.executor,
+                show: true
+            };
+            return chld;
+        }),
+        comps: po.comps,
+        addedprms: po.addedprms || [],
+        evntsLength: po.evnts.length,
+        fixed: false,
+        pindx: 0
+    };
+    /*
     const listel = {
         id: {value: po._id, title: 'id'},
         label: {value: po.postalCode, title: 'Название'},
@@ -226,10 +264,12 @@ function prepData4ListView(po) {
         fixed: false,
         pindx: 0
     };
+    */
     Object.defineProperty(listel, 'id', {
-        enumerable: false,
+        // enumerable: false,
         configurable: false
     });
+    /*
     Object.defineProperty(listel, 'evnts', {
         enumerable: false
     });
@@ -267,6 +307,6 @@ function prepData4ListView(po) {
     Object.defineProperty(listel, 'settlement', {
         configurable: false
     });
-
+    */
     return listel;
 }

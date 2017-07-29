@@ -4,56 +4,75 @@
          <v-card-title><span class="">Отделение редактирование</span></v-card-title>
       </v-card-row>
       <v-card-text>
-
-      <v-layout row v-for="(prop, indx) in poProps" :key="prop.id">
-          <v-flex xs4 v-if="!prop.conf">
-            <v-text-field 
-              name=""
-              label=""
-              id=""
-              v-model="prop.title" readonly
-            ></v-text-field>
-          </v-flex>
-          <v-flex xs2 v-if="prop.conf">
-            <v-text-field 
-              name=""
-              label=""
-              id=""
-              v-model="prop.name" 
-            ></v-text-field>
-          </v-flex>
-          <v-flex xs2 v-if="prop.conf">
-            <v-text-field 
-              name=""
-              label=""
-              id=""
-              v-model="prop.title" 
-            ></v-text-field>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field v-if="!prop.conf"
-              name=""
-              label=""
-              id=""
-              v-model="prop.value" 
-            ></v-text-field>
-            <v-text-field v-if="prop.conf"
-              name=""
-              label=""
-              id=""
-              v-model="prop.value" 
-            ></v-text-field>
-          </v-flex>
-          <v-flex xs1>
-              <v-btn icon class="red--text text--darken-4" @click.native="deleteProp(indx)" v-show="prop.conf">
+       <v-layout row>
+            <v-flex xs4>
+               <v-subheader>Индекс</v-subheader>
+            </v-flex>
+            <v-flex xs8>
+               <v-text-field                  
+                  prepend-icon="dvr"
+                  v-model="newPO.postalCode" 
+                  ></v-text-field>
+            </v-flex>
+         </v-layout>
+         <v-layout row>
+            <v-flex xs4>
+               <v-subheader>Адрес</v-subheader>
+            </v-flex>
+            <v-flex xs8>
+               <v-text-field                  
+                  prepend-icon="dvr"
+                  v-model="newPO.addressSource" 
+                  ></v-text-field>
+            </v-flex>
+         </v-layout> 
+         <v-layout row>
+            <v-flex xs4>
+               <v-subheader>Регион</v-subheader>
+            </v-flex>
+            <v-flex xs8>
+               <v-text-field                  
+                  prepend-icon="dvr"
+                  v-model="newPO.region" 
+                  ></v-text-field>
+            </v-flex>
+         </v-layout>
+         <v-layout row>
+            <v-flex xs4>
+               <v-subheader>Нас. пункт</v-subheader>
+            </v-flex>
+            <v-flex xs8>
+               <v-text-field                  
+                  prepend-icon="dvr"
+                  v-model="newPO.settlement" 
+                  ></v-text-field>
+            </v-flex>
+         </v-layout>
+      
+       <v-layout row v-for="(prop, indx) in newPO.addedprms" :key="prop.id">
+           <v-flex xs2>
+           <v-text-field                  
+                  v-model="prop.name" 
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.title" 
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.value" 
+                  ></v-text-field>         
+         </v-flex>
+         <v-flex xs1>
+              <v-btn icon class="red--text text--darken-4" @click.native="deleteProp(indx)">
                   <v-icon>delete</v-icon>
                 </v-btn>       
           </v-flex>
-        </v-layout>
-       
+        </v-layout> 
       </v-card-text>
-      <v-divider></v-divider> 
-      
+      <v-divider></v-divider>       
       <v-divider></v-divider>
       <v-card-row actions>
          <!--v-btn @click.native="showAddress" primary light>
@@ -86,39 +105,20 @@ export default {
     name: 'editPOCard',
     data() {
         return {
-            soft: [
-          {title: 'какой-то софт', description: 'какое-то пописание', id: '123'},
-          {title: 'какой-то софт2', description: 'какое-то пописание', id: '1234'}
-            ],
-            poProps: []
+            newPO: {},
+            addPrms: []
         };
     },
     mounted() {
-        this.poProps = [];
-        for (let prop in this.po) {
-            let conf = Object.getOwnPropertyDescriptor(this.po, prop);
-            this.poProps.push(
-                {
-                    title: this.po[prop].title,
-                    value: this.po[prop].value,
-                    conf: conf.configurable,
-                    name: prop
-                });
-        }
+        this.addPrms = [];
+        this.newPO = Object.assign({}, this.po);
+        this.addPrms = this.po.addedprms.map(prm => prm);
     },
     watch: {
         po: function (n) {
-            this.poProps = [];
-            for (let prop in n) {
-                let conf = Object.getOwnPropertyDescriptor(n, prop);
-                this.poProps.push(
-                    {
-                        title: n[prop].title,
-                        value: n[prop].value,
-                        conf: conf.configurable,
-                        name: prop
-                    });
-            }
+            this.addPrms = [];
+            this.newPO = Object.assign({}, this.po);
+            this.addPrms = this.po.addedprms.map(prm => prm);
         }
     },
     computed: {
@@ -128,26 +128,27 @@ export default {
     },
     methods: {
         addNewProp() {
-            this.poProps.push({name: 'название свойства', value: 'занчение свойства', conf: true, title: 'отобр название'});
+            this.newPO.addedprms.push({name: 'название свойства', value: 'занчение свойства', conf: true, title: 'отобр название'});
         },
         deleteProp(indx) {
             console.log('deleteProp $indx', indx);
-            this.poProps.splice(indx, 1);
+            this.newPO.addedprms.splice(indx, 1);
         },
         confirmNewBtn() {
-            this.$store.dispatch('updatePO', this.po);
+            this.$store.dispatch('updatePO', this.newPO);
         },
         showAddress() {
             this.$store.commit('SHOW_NEW_ADDRESS', this.po.addressSource);
         },
         addNewHard() {
-            this.soft.push({title: 'какой-то софт2', description: 'какое-то пописание', id: '12345'});
+            this.soft.push({title: 'какой-то софт2', description: 'какое-то описание', id: '12345'});
         },
         goDetailView() {
+            this.$store.commit('SET_CURR_PO', this.newPO);
             this.$router.push({
                 path: '/post-offices-detail',
                 params: {
-                    hi: 'hi @at31'
+                    // po: this.newPO
                 }
             });
         }

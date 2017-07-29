@@ -4,17 +4,14 @@
          <v-card-title><span class="">Отделение удаление</span></v-card-title>
       </v-card-row>
       <v-card-text>
-         <v-layout row>
+       <v-layout row>
             <v-flex xs4>
                <v-subheader>Индекс</v-subheader>
             </v-flex>
             <v-flex xs8>
-               <v-text-field
-                  name="postalCode"
-                  label="Индекс"
-                  id="title"
-                  prepend-icon="event"
-                  v-model="po.postalCode" readonly
+               <v-text-field                  
+                  prepend-icon="dvr"
+                  v-model="newPO.postalCode" readonly
                   ></v-text-field>
             </v-flex>
          </v-layout>
@@ -23,43 +20,54 @@
                <v-subheader>Адрес</v-subheader>
             </v-flex>
             <v-flex xs8>
-               <v-text-field
-                  name="addressSource"
-                  label="Адрес"
-                  id="addressSource"
-                  prepend-icon="event"
-                  v-model="po.addressSource" readonly
+               <v-text-field                  
+                  prepend-icon="dvr"
+                  v-model="newPO.addressSource" readonly
                   ></v-text-field>
             </v-flex>
-         </v-layout>
-         
+         </v-layout> 
          <v-layout row>
             <v-flex xs4>
                <v-subheader>Регион</v-subheader>
             </v-flex>
-            <v-flex xs8>               
-                  <v-text-field 
-                     label="Регион"
-                     v-model="po.region"
-                     prepend-icon="event"
-                     readonly
-                     ></v-text-field>                  
+            <v-flex xs8>
+               <v-text-field                  
+                  prepend-icon="dvr"
+                  v-model="newPO.region" readonly
+                  ></v-text-field>
             </v-flex>
          </v-layout>
          <v-layout row>
             <v-flex xs4>
-               <v-subheader>Город</v-subheader>
+               <v-subheader>Нас. пункт</v-subheader>
             </v-flex>
-            <v-flex xs8>               
-                  <v-text-field 
-                     label="Город"
-                     v-model="po.settlement"
-                     prepend-icon="event"
-                     readonly
-                     ></v-text-field>                  
+            <v-flex xs8>
+               <v-text-field                  
+                  prepend-icon="dvr"
+                  v-model="newPO.settlement" readonly
+                  ></v-text-field>
             </v-flex>
          </v-layout>
-               
+      
+       <v-layout row v-for="(prop, indx) in newPO.addedprms" :key="prop.id">
+           <v-flex xs2>
+           <v-text-field                  
+                  v-model="prop.name" readonly
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.title" readonly
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.value" readonly
+                  ></v-text-field>         
+         </v-flex>
+         <v-flex xs1>      
+          </v-flex>
+        </v-layout> 
       </v-card-text>
       <v-divider></v-divider>
       <v-card-row actions>
@@ -82,14 +90,16 @@ export default {
     name: 'deletePOCard',
     data() {
         return {
-
+            newPO: {}
         };
     },
     mounted() {
-
+        this.newPO = Object.assign({}, this.po);
     },
     watch: {
-
+        po: function (n) {
+            this.newPO = Object.assign({}, this.po);
+        }
     },
     computed: {
         po() {
@@ -98,7 +108,7 @@ export default {
     },
     methods: {
         confirmNewBtn() {
-            this.$store.dispatch('deletePO', this.po);
+            this.$store.dispatch('deletePO', this.newPO);
         },
         goDetailView() {
             this.$router.push({

@@ -21,6 +21,7 @@
                 <pocompcard v-bind:type="cardType" v-if="currComp.show"></pocompcard>
                 <posoftcard v-bind:type="cardType" v-if="currSoft.show"></posoftcard>
                 <posoftcardnew v-if="newSoft.show"></posoftcardnew>
+                <pocompcardnew v-if="newComp.show"></pocompcardnew>
            </v-flex>
            
         </v-layout>
@@ -28,6 +29,7 @@
 
 <script>
 import Posoftcardnew from '@/components/pos/po/structure/POSoftCardNew';
+import Pocompcardnew from '@/components/pos/po/structure/POCompCardNew';
 import Pocompcard from '@/components/pos/po/structure/POCompCard';
 import Posoftcard from '@/components/pos/po/structure/POSoftCard';
 import Newcard from '@/components/pos/po/PostofficeNewCard';
@@ -38,8 +40,9 @@ import Structure from '@/components/pos/po/PostofficeStructure';
 
 
 export default {
-    name: 'pos',
+    name: 'POSructure',
     components: {
+        Pocompcardnew,
         Posoftcardnew,
         Pocompcard,
         Posoftcard,
