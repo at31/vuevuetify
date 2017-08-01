@@ -20,7 +20,7 @@ export default {
             },
             options: {},
             cy: {},
-            vis: ''
+            vis: {destroy: () => { true; }}
         };
     },
     mounted() {
@@ -140,12 +140,12 @@ export default {
     },
     watch: {
         po: function (npo) {
-           // console.log('change soft');
+            // console.log('change soft');
             // collectCYElements(this.po);
             // this.cy.add(this.elements);
             // this.elements = null;
             this.vis.destroy();
-            collectVisDataset(this.po);
+            collectVisDataset(npo);
 // create a network
             var container = document.getElementById('cy');
             this.vis = new vis.Network(container, this.elements, this.options);
@@ -188,13 +188,16 @@ function collectVisDataset(npo) {
     self.elements.nodes = [];
     self.elements.edges = [];
     self.elements.nodes.push({id: npo.postalCode, label: npo.postalCode, type: 'po', shape: 'image', image: '../static/po.svg'});
-    npo.comps.forEach(comp => {
-        let node = {id: comp.id, type: 'comp', label: comp.title, description: comp.description, shape: 'image', image: '../static/comp.svg', addedprms: comp.addedprms};
+    npo.comps.forEach((comp, indx) => {
+        let _addedprms = comp.addedprms === undefined ? [] : comp.addedprms.map(prm => prm);
+        let node = {id: comp.id, indx: indx, type: 'comp', label: comp.title, description: comp.description, shape: 'image', image: '../static/comp.svg', addedprms: _addedprms};
         let edge = {from: comp.id, to: npo.postalCode};
         self.elements.nodes.push(node);
         self.elements.edges.push(edge);
-        comp.soft.forEach(app => {
-            let node = {id: app.id, type: 'soft', label: app.title, description: app.description, compname: comp.title, shape: 'image', image: '../static/soft.svg'};
+        console.log('soft', comp.soft, comp.id);
+        comp.soft.forEach((app, indx) => {
+            let addedprms = app.addedprms === undefined ? [] : app.addedprms.map(prm => prm);
+            let node = {id: app.id, indx: indx, type: 'soft', label: app.title, description: app.description, compid: comp.id, compname: comp.title, shape: 'image', image: '../static/soft.svg', addedprms: addedprms};
             let edge = {from: app.id, to: comp.id};
             self.elements.nodes.push(node);
             self.elements.edges.push(edge);

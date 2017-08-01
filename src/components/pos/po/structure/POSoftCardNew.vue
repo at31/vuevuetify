@@ -64,12 +64,37 @@
                   ></v-text-field>
             </v-flex>
          </v-layout>
-                                 
+           <v-layout row v-for="(prop, indx) in addPrms" >
+           <v-flex xs2>
+           <v-text-field                  
+                  v-model="prop.name" 
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.title" 
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.value" 
+                  ></v-text-field>         
+         </v-flex>
+         <v-flex xs1>
+              <v-btn icon class="red--text text--darken-4" @click.native="deleteProp(indx)">
+                  <v-icon>delete</v-icon>
+                </v-btn>       
+          </v-flex>
+        </v-layout>                       
       </v-card-text>
  
 
       <v-divider></v-divider>
       <v-card-row actions>
+            <v-btn @click.native="addNewProp" success light class="mr-2 green ">
+            <v-icon light>add</v-icon>
+            Добавить свойство
+        </v-btn>  
              <v-btn @click.native="confirmNewBtn" success light >
             <v-icon light>done</v-icon>
             Сохранить
@@ -86,7 +111,8 @@ export default {
     name: 'eventdetail',
     data() {
         return {
-            newSoft: {}
+            newSoft: {},
+            addPrms: []
         };
     },
     mounted() {
@@ -112,11 +138,21 @@ export default {
         confirmNewBtn() {
             this.po.comps.forEach(c => {
                 if (c.id === self.newSoft.comp.id) {
-                    c.soft.push({id: self.newSoft.id, title: self.newSoft.title, description: self.newSoft.description});
+                    c.soft.push({
+                        id: self.newSoft.id,
+                        title: self.newSoft.title,
+                        description: self.newSoft.description,
+                        addedprms: this.addPrms
+                    });
                 }
             });
             this.$store.commit('SET_CURR_PO', Object.assign({}, this.po));
-            console.log('new soft ', this.po);
+        },
+        addNewProp() {
+            this.addPrms.push({name: '', title: '', value: ''});
+        },
+        deleteProp(indx) {
+            this.addPrms.splice(indx, 1);
         }
     }
 };

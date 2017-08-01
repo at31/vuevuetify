@@ -48,7 +48,7 @@
                   ></v-text-field>
             </v-flex>
          </v-layout>
-         <v-layout row v-for="(prop, indx) in addPrms" :key="prop.id">
+         <v-layout row v-for="(prop, indx) in addPrms" >
            <v-flex xs2>
            <v-text-field                  
                   v-model="prop.name" 
@@ -132,7 +132,6 @@ export default {
                 });
 
             this.$store.commit('SET_CURR_PO', Object.assign({}, this.po));
-            console.log('new soft ', this.po);
         },
         addNewProp() {
             this.addPrms.push({name: '', title: '', value: ''});

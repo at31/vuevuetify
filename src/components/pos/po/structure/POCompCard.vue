@@ -85,7 +85,26 @@
                   ></v-text-field>
             </v-flex>
          </v-layout>
-                                 
+         <v-layout row v-for="(prop, indx) in addPrms" :key="prop.id">
+           <v-flex xs2>
+           <v-text-field                  
+                  v-model="prop.name" readonly
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.title" readonly
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.value" readonly
+                  ></v-text-field>         
+         </v-flex>
+         <v-flex xs1>
+              
+          </v-flex>
+        </v-layout>                        
       </v-card-text>  
 
       <v-divider></v-divider>
@@ -130,7 +149,7 @@ export default {
         };
     },
     mounted() {
-        console.log(this.comp);
+        // console.log(this.comp);
         switch (this.type) {
             case 'edit':
                 this.edit = true;
@@ -142,9 +161,13 @@ export default {
                 this.info = true;
                 break;
         }
+        // this.addPrms = [];
         this.addPrms = this.comp.addedprms.map(prm => prm);
     },
     watch: {
+        comp: function (n) {
+            this.addPrms = this.comp.addedprms.map(prm => prm);
+        }
     },
     computed: {
         comp() {
@@ -153,8 +176,17 @@ export default {
     },
     methods: {
         confirmChngBtn() {
+            const ho = {
+                addedprms: this.addPrms,
+                id: this.comp.id,
+                title: this.comp.label,
+                description: this.comp.description,
+                indx: this.comp.indx
+            };
+            this.$store.commit('UPDATE_HARD', ho);
         },
         confirmDelBtn() {
+
         },
         goDetailView() {
             this.$router.push({

@@ -88,11 +88,46 @@ const actions = {
         const arr = state.postOffices.map((otd) => prepData4ListView(otd));
         // state.selectedPO = arr;
         context.commit('SET_SELECTED_PO', arr);
+    },
+    freePOFilter(context, fstr) {
+        let filter = {match: JSON.parse(fstr)};
+        axios.post('http://127.0.0.1:3000/po/search', filter)
+                 .then(response => {
+                     if (response.status === 200) {
+                         console.log('pre evnts loaded');
+                         context.commit('PO_LOADED', response.data);
+                     }
+                 })
+                 .catch(e => {
+                     console.log('ошибка загрузки PO $err', err);
+                     context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка загрузки отделений'});
+                 });
     }
 };
 
 // mutations
 const mutations = {
+    UPDATE_SOFT(state, soft) {
+        state.currPO.comps.forEach(comp => {
+            if (comp.id === soft.compid) {
+                const i = soft.indx;
+                comp.soft[i] = soft;
+                delete comp.soft[i].indx;
+                delete comp.soft[i].compid;
+            }
+        });
+        var tcpo = state.currPO;
+        state.currPO = Object.assign({}, tcpo);
+    },
+    UPDATE_HARD(state, hard) {
+        console.log('hard', hard);
+        const i = hard.indx;
+        hard.soft = state.currPO.comps[i].soft;
+        state.currPO.comps[i] = hard;
+        delete state.currPO.comps[i].indx;
+        var tcpo = state.currPO;
+        state.currPO = Object.assign({}, tcpo);
+    },
     SET_NEW_COMP(state, s) {
         state.newCompShow = s;
     },
