@@ -74,8 +74,14 @@
                   v-model="currList.executor.fio"
                   readonly
                   ></v-text-field>
-            </v-flex>
+            </v-flex>             
          </v-layout>
+         <v-card-row actions>
+            <v-btn @click.native="confirmChngBtn" primary light >
+            <v-icon light>done</v-icon>
+            Список выполнен
+         </v-btn>
+         </v-card-row>
       </v-card>
     </v-tabs-content>
     
@@ -97,6 +103,11 @@
                 <v-list-tile-sub-title>{{ evnt.start.format('HH:mm YYYY-MM-DD') }} - {{ evnt.end.format('HH:mm YYYY-MM-DD') }}</v-list-tile-sub-title>
               </v-list-tile-content>
               <v-list-tile-action>
+                <v-btn icon ripple @click.native="showDetailEvent(evnt)">
+                  <v-icon class="indigo--text text--lighten-1" >edit</v-icon>
+                </v-btn>
+              </v-list-tile-action>
+              <v-list-tile-action>                
                 <v-btn icon ripple @click.native="showDetailEvent(evnt)">
                   <v-icon class="indigo--text text--lighten-1" >info</v-icon>
                 </v-btn>
@@ -161,7 +172,8 @@ export default {
         }
     },
     methods: {
-        confirmNewBtn() {
+        confirmChngBtn() {
+            this.$store.commit('SHOW_LIST_DIALOG', true);
         },
         showDetailPO(po) {
             this.$store.commit('SET_CURR_PO', po);

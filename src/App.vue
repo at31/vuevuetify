@@ -80,6 +80,7 @@
     </v-snackbar>
  <postofficedetaildialog ></postofficedetaildialog>
 <eventdetaildialog></eventdetaildialog>
+<listdonedialog></listdonedialog>
       </v-container>
     </main>
     <v-navigation-drawer
@@ -107,11 +108,13 @@
 <script>
 import Postofficedetaildialog from '@/components/pos/PostOfficesDetailDialog';
 import Eventdetaildialog from '@/components/evnts/Evntdetaildialog';
+import Listdonedialog from '@/components/lists/ListDoneDialog';
 
 export default {
     components: {
         Postofficedetaildialog,
-        Eventdetaildialog
+        Eventdetaildialog,
+        Listdonedialog
     },
     props: {
         atitle: {

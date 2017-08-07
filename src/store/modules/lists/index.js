@@ -4,6 +4,7 @@ import moment from 'moment';
 moment().locale('ru');
 // initial state
 const state = {
+    showListDialog: false,
     lists: [],
     currList: {
         _id: '',
@@ -130,6 +131,7 @@ const actions = {
                         });
                     });
                     list.path = path;
+                    list.endDate = moment();
                 });
                 context.commit('LISTS_LOADED', data);
             }
@@ -141,6 +143,9 @@ const actions = {
 
 // mutations
 const mutations = {
+    SHOW_LIST_DIALOG(state, showDialog) {
+        state.showListDialog = showDialog;
+    },
     LISTS_LOADED(state, data) {
         state.lists = data;
     },

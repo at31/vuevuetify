@@ -47,6 +47,7 @@ const actions = {
         });
     },
     updatePO(context, po) {
+        console.log('po', po);
         axios.post('http://127.0.0.1:3000/po/update', po).then(response => {
             if (response.status === 200) {
                 context.dispatch('loadAllPO');
