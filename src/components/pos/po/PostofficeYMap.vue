@@ -20,13 +20,14 @@ export default {
     },
     mounted() {
         self = this;
-        console.log('this.currPO ', this.currPO);
-        if (window.ymapsloaded) {
+        if (window.ymaps.Map !== undefined) {
             mapRender();
         } else {
-            window.addEventListener('ymapsloaded', function (e) {
+            let handler = () => {
+                document.body.removeEventListener('ymapsloaded', handler, false);
                 mapRender();
-            }, false);
+            };
+            document.body.addEventListener('ymapsloaded', handler, false);
         }
     },
     beforeDestroy() {

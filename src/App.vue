@@ -81,6 +81,8 @@
  <postofficedetaildialog ></postofficedetaildialog>
 <eventdetaildialog></eventdetaildialog>
 <listdonedialog></listdonedialog>
+<evntdonedialog></evntdonedialog>
+<evntinfodialog></evntinfodialog>
       </v-container>
     </main>
     <v-navigation-drawer
@@ -109,12 +111,16 @@
 import Postofficedetaildialog from '@/components/pos/PostOfficesDetailDialog';
 import Eventdetaildialog from '@/components/evnts/Evntdetaildialog';
 import Listdonedialog from '@/components/lists/ListDoneDialog';
+import Evntdonedialog from '@/components/lists/EvntDoneDialog';
+import Evntinfodialog from '@/components/evnts/Evntdetaildialog.vue';
 
 export default {
     components: {
         Postofficedetaildialog,
         Eventdetaildialog,
-        Listdonedialog
+        Listdonedialog,
+        Evntdonedialog,
+        Evntinfodialog
     },
     props: {
         atitle: {

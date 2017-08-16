@@ -86,9 +86,11 @@ const actions = {
 
     },
     removeFilterMap(context) {
-        const arr = state.postOffices.map((otd) => prepData4ListView(otd));
+        // const arr = state.postOffices.map((otd) => prepData4ListView(otd));
         // state.selectedPO = arr;
-        context.commit('SET_SELECTED_PO', arr);
+        // context.commit('SET_SELECTED_PO', arr);
+        state.selectedPO = [];
+        context.dispatch('loadAllPO');
     },
     freePOFilter(context, fstr) {
         let filter = {match: JSON.parse(fstr)};

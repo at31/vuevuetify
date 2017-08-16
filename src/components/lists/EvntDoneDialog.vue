@@ -7,15 +7,15 @@
 
           <div class="modal-header">
             <slot name="header">
-              Закрытие списка
+              Закрытие задания
             </slot>
           </div>
 
           <div class="modal-body">
             <slot name="body">
               
-            <v-text-field label="Заголовок" :value="currList.title"></v-text-field>
-            <!--v-text-field label="Окончание" :value="currList.endDate.format('HH:mm DD-MM-YYYY')"></v-text-field-->
+            <v-text-field label="Заголовок" :value="currEvnt.title"></v-text-field>
+            <!--v-text-field label="Окончание" :value="currEvnt.endDate.format('HH:mm DD-MM-YYYY')"></v-text-field-->
             <v-layout row>
             <v-flex xs4>
                <v-subheader>Дата зак.</v-subheader>
@@ -77,15 +77,15 @@
                 name="input-1"
                 label="Label Text"
                 textarea
-                v-model="currList.endDesc"
+                v-model="currEvnt.endDesc"
               ></v-text-field>
             </v-flex>
           </v-layout>
           <div class="modal-footer">
             <slot name="footer">
               
-             <v-btn class="blue darken-1" flat @click.native="closeAndSave">Закрыть список</v-btn>
-             <v-btn class="red darken-1" flat @click.native="close">Отмена</v-btn>
+             <v-btn class="blue darken-1" flat @click.native="closeAndSave">Отметить как выполненное</v-btn>
+             <v-btn class="red darken-1" flat @click.native="close">Закрыть</v-btn>
             </slot>
           </div>
             </slot>
@@ -103,7 +103,7 @@ import moment from 'moment';
 export default {
 
 
-    name: 'listDialog',
+    name: 'EvntDoneDialog',
     data() {
         return {
             dialog: false,
@@ -114,6 +114,10 @@ export default {
         };
     },
     mounted() {
+        if (this.currEvnt.endDate) {
+            this.dateEnd = this.currEvnt.endDate.format('DD-MM-YYYY');
+            this.timeEnd = this.currEvnt.endDate.format('HH:mm');
+        }
     },
     watch: {
         showDialog: function (n) {
@@ -122,22 +126,22 @@ export default {
         }
     },
     computed: {
-        currList() {
-            return this.$store.state.lists.currList;
+        currEvnt() {
+            return this.$store.state.lists.currEvnt;
         },
         showDialog() {
-            return this.$store.state.lists.showListDialog;
+            return this.$store.state.lists.showListEvntDialog;
         }
     },
     methods: {
         close() {
-            this.$store.commit('SHOW_LIST_DIALOG', false);
+            this.$store.commit('SHOW_LIST_EVNT_DIALOG', false);
         },
         closeAndSave() {
-            console.log(this.currList);
-            this.currList.status = 'complete'; // выполнено задание, в дальнейшем возможно статус ставить разный, как пожелает заказчик.
-            this.currList.endDate = moment(this.dateEnd + ' ' + this.timeEnd).toDate();
-            this.$store.dispatch('updateList', this.currList);
+            this.currEvnt.status = 'complete'; // выполнено задание, в дальнейшем возможно статус ставить разный, как пожелает заказчик.
+            this.currEvnt.endDate = moment(this.dateEnd + ' ' + this.timeEnd, 'YYYY-MM-DD HH:mm').toDate();
+            // this.$store.dispatch('updateListEvnt', this.currEvnt);
+            this.$store.dispatch('updateEvent', this.currEvnt);
             this.$store.commit('SHOW_LIST_DIALOG', false);
         }
 

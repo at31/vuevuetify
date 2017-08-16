@@ -126,6 +126,7 @@ const mutations = {
     },
     PREEVENTS_LOADED(state, data) {
         state.preevnts = data.map(event => {
+            console.log(event.start);
             return {
                 id: event._id,
                 label: event.title,

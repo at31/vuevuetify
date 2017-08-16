@@ -55,13 +55,12 @@
 <script>
 
 export default {
-    name: 'pofilter',
+    name: 'listsall',
     components: {
 
     },
     data() {
         return {
-            filter: {postalCode: ''}
 
         };
     },

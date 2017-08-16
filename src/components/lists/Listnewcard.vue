@@ -77,7 +77,9 @@
                     description: '',
                     executor: '',
                     path: [],
-                    evnts: []
+                    evnts: [],
+                    endDesc: '',
+                    endDate: false
                 }
             };
         },

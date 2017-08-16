@@ -72,7 +72,7 @@ export default {
             this.$store.dispatch('freePOFilter', this.mongoMatch);
         },
         removeFilter() {
-            this.$store.dispatch('loadAllPO');
+            this.$store.dispatch('removeFilterMap');
         }
     }
 };

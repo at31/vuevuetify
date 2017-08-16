@@ -52,7 +52,7 @@
 <script>
 
 export default {
-    name: 'pofilter',
+    name: 'poSelectedList',
     components: {
 
     },

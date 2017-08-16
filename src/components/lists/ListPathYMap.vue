@@ -23,13 +23,14 @@ export default {
     mounted() {
         console.log('ygmap mounted');
         self = this;
-        if (window.ymaps !== undefined) {
+        if (window.ymaps.Map !== undefined) {
             mapRender();
         } else {
-            window.addEventListener('ymapsloaded', function (e) {
-                window.removeEventListener('ymapsloaded');
+            let handler = () => {
+                document.body.removeEventListener('ymapsloaded', handler, false);
                 mapRender();
-            }, false);
+            };
+            document.body.addEventListener('ymapsloaded', handler, false);
         }
     },
     beforeDestroy() {
@@ -53,7 +54,6 @@ export default {
 
     }
 };
-
 function createPath() {
     if ((typeof _route) === 'object') {
         mymap.geoObjects.remove(_route);

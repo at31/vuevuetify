@@ -10,7 +10,9 @@ const state = {
         end: {format: () => {}},
         status: 1,
         description: '',
-        socket: ''
+        socket: '',
+        endDate: '',
+        endDesc: ''
     },
     newEvent: {
 
@@ -60,6 +62,7 @@ const actions = {
         }
     },
     updateEvent(context, event) {
+        console.log(event);
         context.commit('CARD_TYPE', 'none');
         axios.post('http://127.0.0.1:3000/evnt/update/' + event._id, event)
             .then(response => {
@@ -68,6 +71,7 @@ const actions = {
                     text: 'Задача обновлена'});
                 context.dispatch('loadAllEvents');
                 context.dispatch('loadAllPO');
+                context.dispatch('getListsAll');
             }).catch(err => {
                 console.log('ошибка изменения задачи $err', err);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'error',
@@ -115,7 +119,9 @@ const mutations = {
                 status: event.status,
                 description: event.description,
                 executor: event.executor,
-                show: true
+                show: true,
+                endDate: moment(event.endDate),
+                endDesc: event.endDesc
             };
         });
     }
