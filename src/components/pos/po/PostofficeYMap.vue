@@ -77,7 +77,7 @@ function markCentrChange(color) {
         hintContent: '<strong>' + self.currPO.addressSource + '</strong>'
     }, {
         preset: color
-            // iconColor: '#735184'
+        // iconColor: '#735184'
     });
     geoCollection = new window.ymaps.GeoObjectCollection();
     geoCollection.add(pmark);

@@ -137,22 +137,22 @@ export default {
             drawer: true,
             fixed: false,
             items: [
-          {title: 'Главная', icon: 'dashboard', listitem: true, path: '/', params: {}},
-          {divider: true},
-          {header: 'Списки'},
-          {title: 'Новый список', icon: 'add', listitem: true, path: '/list-new', params: {}},
-          {title: 'Управление списками', icon: 'list', listitem: true, path: '/lists', params: {}},
-          {title: 'Сравнение списков', icon: 'compare_arrows', listitem: true, path: '/pogmap'},
-          {divider: true},
-          {header: 'Задачи'},
-          {title: 'Создать новую задачу', icon: 'add', listitem: true, path: '/event-new'},
-          {title: 'Редактирование / удаление', icon: 'edit', listitem: true, path: '/events'},
-          {divider: true},
-          {header: 'Отделения'},
-          {title: 'Управление отделениями', icon: 'edit', listitem: true, path: '/post-offices'},
-          {divider: true},
-          {header: 'Пользователи'},
-          {title: 'Управление пользователями', icon: 'people', listitem: true, path: '/users', props: {atitle: 'Управление пользователями'}}
+                {title: 'Главная', icon: 'dashboard', listitem: true, path: '/', params: {}},
+                {divider: true},
+                {header: 'Списки'},
+                {title: 'Новый список', icon: 'add', listitem: true, path: '/list-new', params: {}},
+                {title: 'Управление списками', icon: 'list', listitem: true, path: '/lists', params: {}},
+                {title: 'Сравнение списков', icon: 'compare_arrows', listitem: true, path: '/pogmap'},
+                {divider: true},
+                {header: 'Задачи'},
+                {title: 'Создать новую задачу', icon: 'add', listitem: true, path: '/event-new'},
+                {title: 'Редактирование / удаление', icon: 'edit', listitem: true, path: '/events'},
+                {divider: true},
+                {header: 'Отделения'},
+                {title: 'Управление отделениями', icon: 'edit', listitem: true, path: '/post-offices'},
+                {divider: true},
+                {header: 'Пользователи'},
+                {title: 'Управление пользователями', icon: 'people', listitem: true, path: '/users', props: {atitle: 'Управление пользователями'}}
             ],
             miniVariant: false,
             right: true,
@@ -167,7 +167,7 @@ export default {
     beforeCreate() {
         this.$store.dispatch('loadAllPO');
         this.$store.dispatch('getUsers');
-          // this.$store.dispatch('loadAllPO');
+        // this.$store.dispatch('loadAllPO');
     },
     computed: {
         attitle() {
@@ -182,7 +182,7 @@ export default {
             this.infoSnackbar = n;
         },
         '$route': function (to, from) {
-              // console.log(to, from);
+            // console.log(to, from);
         },
         attitle: function (n) {
             this.title = n.title;
@@ -191,11 +191,11 @@ export default {
     },
     methods: {
         onClick({path, props}) {
-         /*     this.$router.push({
+            /*     this.$router.push({
                   path: path,
                   params: params
               });*/
-              // this.title = params.title;
+            // this.title = params.title;
         }
     }
 };

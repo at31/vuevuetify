@@ -26,7 +26,7 @@ export default {
     mounted() {
         console.log('cytoscape mounted');
         self = this;
-/*
+        /*
         collectCYElements(this.po);
         this.cy = window.cy = cytoscape({
             container: document.getElementById('cy'),
@@ -101,7 +101,7 @@ export default {
         */
         console.log('vis po', this.po);
         collectVisDataset(this.po);
-// create a network
+        // create a network
         var container = document.getElementById('cy');
         this.vis = new vis.Network(container, this.elements, this.options);
         this.vis.on('click', function (params) {
@@ -112,17 +112,20 @@ export default {
                     break;
                 case 'comp':
                     ndata.show = true;
-                    self.$store.commit('SET_CURR_SOFT', {show: false});
+                    this.closeAll();
                     self.$store.commit('SET_CURR_COMP', ndata);
-                    self.$store.commit('SET_NEW_COMP', {show: false});
-                    self.$store.commit('SET_NEW_SOFT', {show: false});
+
                     break;
                 case 'soft':
                     ndata.show = true;
-                    self.$store.commit('SET_CURR_COMP', {show: false});
+                    this.closeAll();
                     self.$store.commit('SET_CURR_SOFT', ndata);
-                    self.$store.commit('SET_NEW_COMP', {show: false});
-                    self.$store.commit('SET_NEW_SOFT', {show: false});
+
+                    break;
+                case 'hard':
+                    ndata.show = true;
+                    this.closeAll();
+                    self.$store.commit('SET_CURR_HARD', ndata);
                     break;
             }
         });
@@ -146,7 +149,7 @@ export default {
             // this.elements = null;
             this.vis.destroy();
             collectVisDataset(npo);
-// create a network
+            // create a network
             var container = document.getElementById('cy');
             this.vis = new vis.Network(container, this.elements, this.options);
             this.vis.on('click', function (params) {
@@ -157,17 +160,20 @@ export default {
                         break;
                     case 'comp':
                         ndata.show = true;
-                        self.$store.commit('SET_CURR_SOFT', {show: false});
+                        this.closeAll();
                         self.$store.commit('SET_CURR_COMP', ndata);
-                        self.$store.commit('SET_NEW_COMP', {show: false});
-                        self.$store.commit('SET_NEW_SOFT', {show: false});
+
                         break;
                     case 'soft':
                         ndata.show = true;
-                        self.$store.commit('SET_CURR_COMP', {show: false});
+                        this.closeAll();
                         self.$store.commit('SET_CURR_SOFT', ndata);
-                        self.$store.commit('SET_NEW_COMP', {show: false});
-                        self.$store.commit('SET_NEW_SOFT', {show: false});
+
+                        break;
+                    case 'hard':
+                        ndata.show = true;
+                        this.closeAll();
+                        self.$store.commit('SET_CURR_HARD', ndata);
                         break;
                 }
             });
@@ -180,6 +186,14 @@ export default {
         }
     },
     methods: {
+        closeAll() {
+            self.$store.commit('SET_CURR_COMP', {show: false});
+            self.$store.commit('SET_CURR_SOFT', {show: false});
+            self.$store.commit('SET_NEW_COMP', {show: false});
+            self.$store.commit('SET_NEW_SOFT', {show: false});
+            self.$store.commit('SET_CURR_HARD', {show: false});
+            self.$store.commit('SET_NEW_HARD', {show: false});
+        }
 
     }
 };
@@ -198,6 +212,14 @@ function collectVisDataset(npo) {
         comp.soft.forEach((app, indx) => {
             let addedprms = app.addedprms === undefined ? [] : app.addedprms.map(prm => prm);
             let node = {id: app.id, indx: indx, type: 'soft', label: app.title, description: app.description, compid: comp.id, compname: comp.title, shape: 'image', image: '../static/soft.svg', addedprms: addedprms};
+            let edge = {from: app.id, to: comp.id};
+            self.elements.nodes.push(node);
+            self.elements.edges.push(edge);
+        });
+        comp.hard = comp.hard || [];
+        comp.hard.forEach((app, indx) => {
+            let addedprms = app.addedprms === undefined ? [] : app.addedprms.map(prm => prm);
+            let node = {id: app.id, indx: indx, type: 'hard', label: app.title, description: app.description, compid: comp.id, compname: comp.title, shape: 'image', image: '../static/hard.svg', addedprms: addedprms};
             let edge = {from: app.id, to: comp.id};
             self.elements.nodes.push(node);
             self.elements.edges.push(edge);

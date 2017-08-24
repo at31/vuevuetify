@@ -96,13 +96,13 @@ function clearMap() {
 function markerRemake(selectedPostalCode) {
     self.selectedPO.forEach((po, indx) => {
         if (po.postalCode !== selectedPostalCode) {
-           // let _color = 'grey';
-           // let _size = 0.5;
+            // let _color = 'grey';
+            // let _size = 0.5;
         /* if (po.postalCode === selectedPostalCode) {
             _color = 'red';
             _size = 0.7;
         } */
-/*
+            /*
             let marker = new MarkerWL({
                 position: new google.maps.LatLng(po.latitude, po.longitude),
                 draggable: true,

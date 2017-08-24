@@ -75,7 +75,7 @@ const actions = {
                 ontext.commit('INFO_SNACKBAR', {show: true, context: 'success',
                     text: 'Список удален успешно'});
                 context.dispatch('getListsAll');
-           //
+                //
             }).catch(err => {
                 console.log('ошибка записи списка $err', err);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'error',

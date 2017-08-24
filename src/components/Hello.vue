@@ -23,7 +23,7 @@ export default {
         };
     },
     mounted() {
-            // console.log(this.atitle);
+        // console.log(this.atitle);
         this.$store.commit('ATITLE', {title: 'Главная', color: ''});
     },
     methods: {

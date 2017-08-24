@@ -1,9 +1,23 @@
 <template>
    <v-card>
       <v-card-row v-bind:class="{blue: edit , red: del, green: info, 'lighten-3': true}">
-         <v-card-title><span class="">Оборудование подробно</span></v-card-title>
+         <v-card-title><span class="">Доп. оборудование подробно</span></v-card-title>
       </v-card-row>
       <v-card-text v-if="edit">
+      <v-layout row>
+            <v-flex xs4>
+               <v-subheader>Где установлено</v-subheader>
+            </v-flex>
+            <v-flex xs8>
+               <v-text-field
+                  name="compname"
+                  label="где установлено"
+                  id="compname"
+                  prepend-icon="dvr"
+                  v-model="hard.compname" 
+                  ></v-text-field>
+            </v-flex>
+         </v-layout>
          <v-layout row>
             <v-flex xs4>
                <v-subheader>Название</v-subheader>
@@ -14,7 +28,7 @@
                   label="Название"
                   id="title"
                   prepend-icon="dvr"
-                  v-model="comp.label" 
+                  v-model="hard.label" 
                   ></v-text-field>
             </v-flex>
          </v-layout>
@@ -28,11 +42,11 @@
                   label="Описание"
                   id="description"
                   prepend-icon="dvr"
-                  v-model="comp.description" 
+                  v-model="hard.description" 
                   ></v-text-field>
             </v-flex>
          </v-layout>
-         <v-layout row v-for="(prop, indx) in addPrms" :key="prop.id">
+          <v-layout row v-for="(prop, indx) in addPrms" :key="prop.id">
            <v-flex xs2>
            <v-text-field                  
                   v-model="prop.name" 
@@ -53,10 +67,24 @@
                   <v-icon>delete</v-icon>
                 </v-btn>       
           </v-flex>
-        </v-layout> 
+        </v-layout>                        
       </v-card-text>
 
       <v-card-text v-if="!edit">
+      <v-layout row>
+            <v-flex xs4>
+               <v-subheader>Где установлено</v-subheader>
+            </v-flex>
+            <v-flex xs8>
+               <v-text-field
+                  name="compname"
+                  label="где установлено"
+                  id="compname"
+                  prepend-icon="dvr"
+                  v-model="hard.compname" readonly
+                  ></v-text-field>
+            </v-flex>
+         </v-layout>
          <v-layout row>
             <v-flex xs4>
                <v-subheader>Название</v-subheader>
@@ -67,7 +95,7 @@
                   label="Название"
                   id="title"
                   prepend-icon="dvr"
-                  v-model="comp.title" readonly
+                  v-model="hard.title" readonly
                   ></v-text-field>
             </v-flex>
          </v-layout>
@@ -81,30 +109,30 @@
                   label="Описание"
                   id="description"
                   prepend-icon="dvr"
-                  v-model="comp.description" readonly
+                  v-model="hard.description" readonly
                   ></v-text-field>
             </v-flex>
          </v-layout>
-         <v-layout row v-for="(prop, indx) in addPrms" :key="prop.id">
+          <v-layout row v-for="(prop, indx) in addPrms" :key="prop.id">
            <v-flex xs2>
            <v-text-field                  
-                  v-model="prop.name" readonly
+                  v-model="prop.name" 
                   ></v-text-field>
          </v-flex>
          <v-flex xs4>
            <v-text-field                  
-                  v-model="prop.title" readonly
+                  v-model="prop.title" 
                   ></v-text-field>
          </v-flex>
          <v-flex xs4>
            <v-text-field                  
-                  v-model="prop.value" readonly
+                  v-model="prop.value" 
                   ></v-text-field>         
          </v-flex>
          <v-flex xs1>
               
           </v-flex>
-        </v-layout>                        
+        </v-layout>                       
       </v-card-text>  
 
       <v-divider></v-divider>
@@ -139,7 +167,7 @@ export default {
     },
     data() {
         return {
-            newComp: {},
+            newhard: {},
             addPrms: [],
             edit: false,
             del: false,
@@ -149,7 +177,6 @@ export default {
         };
     },
     mounted() {
-        // console.log(this.comp);
         switch (this.type) {
             case 'edit':
                 this.edit = true;
@@ -161,32 +188,32 @@ export default {
                 this.info = true;
                 break;
         }
-        // this.addPrms = [];
-        this.addPrms = this.comp.addedprms.map(prm => prm);
+        this.addPrms = this.hard.addedprms;
     },
     watch: {
-        comp: function (n) {
-            this.addPrms = this.comp.addedprms.map(prm => prm);
+        hard: function () {
+            this.addPrms = this.hard.addedprms;
+            console.log(this.addPrms);
         }
     },
     computed: {
-        comp() {
-            return this.$store.state.po.currComp;
+        hard() {
+            return this.$store.state.po.currHard;
         }
     },
     methods: {
         confirmChngBtn() {
-            const ho = {
+            const so = {
                 addedprms: this.addPrms,
-                id: this.comp.id,
-                title: this.comp.label,
-                description: this.comp.description,
-                indx: this.comp.indx
+                id: this.hard.id,
+                title: this.hard.label,
+                description: this.hard.description,
+                indx: this.hard.indx,
+                compid: this.hard.compid
             };
-            this.$store.commit('UPDATE_COMP', ho);
+            this.$store.commit('UPDATE_HARD', so);
         },
         confirmDelBtn() {
-
         },
         goDetailView() {
             this.$router.push({

@@ -21,7 +21,9 @@ const state = {
     currComp: {show: false},
     currSoft: {show: false},
     newCompShow: {show: false},
-    newSoftShow: {show: false}
+    newSoftShow: {show: false},
+    currHard: {show: false},
+    newHardShow: {show: false}
 };
 // console.log('index');
 // getters
@@ -95,21 +97,33 @@ const actions = {
     freePOFilter(context, fstr) {
         let filter = {match: JSON.parse(fstr)};
         axios.post('http://127.0.0.1:3000/po/search', filter)
-                 .then(response => {
-                     if (response.status === 200) {
-                         console.log('pre evnts loaded');
-                         context.commit('PO_LOADED', response.data);
-                     }
-                 })
-                 .catch(e => {
-                     console.log('ошибка загрузки PO $err', err);
-                     context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка загрузки отделений'});
-                 });
+            .then(response => {
+                if (response.status === 200) {
+                    console.log('pre evnts loaded');
+                    context.commit('PO_LOADED', response.data);
+                }
+            })
+            .catch(e => {
+                console.log('ошибка загрузки PO $err', err);
+                context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка загрузки отделений'});
+            });
     }
 };
 
 // mutations
 const mutations = {
+    UPDATE_HARD(state, hard) {
+        state.currPO.hard.forEach(comp => {
+            if (comp.id === hard.compid) {
+                const i = hard.indx;
+                comp.hard[i] = hard;
+                delete comp.hard[i].indx;
+                delete comp.hard[i].compid;
+            }
+        });
+        var tcpo = state.currPO;
+        state.currPO = Object.assign({}, tcpo);
+    },
     UPDATE_SOFT(state, soft) {
         state.currPO.comps.forEach(comp => {
             if (comp.id === soft.compid) {
@@ -122,7 +136,7 @@ const mutations = {
         var tcpo = state.currPO;
         state.currPO = Object.assign({}, tcpo);
     },
-    UPDATE_HARD(state, hard) {
+    UPDATE_COMP(state, hard) {
         console.log('hard', hard);
         const i = hard.indx;
         hard.soft = state.currPO.comps[i].soft;
@@ -130,6 +144,12 @@ const mutations = {
         delete state.currPO.comps[i].indx;
         var tcpo = state.currPO;
         state.currPO = Object.assign({}, tcpo);
+    },
+    SET_NEW_HARD(state, s) {
+        state.newHardShow = s;
+    },
+    SET_CURR_HARD(state, s) {
+        state.currHard = s;
     },
     SET_NEW_COMP(state, s) {
         state.newCompShow = s;
@@ -193,11 +213,11 @@ const mutations = {
         state.postOffices.forEach((otd) => {
             let _f = filter;
             for (let k in _f) {
-               // console.dir(_f[k]);
+                // console.dir(_f[k]);
                 let res = _f[k](otd);
                 if (res) {
                     if (!state.selectedPostCodeSet.has(otd.postalCode)) {
-                                // console.log(state.selectedPO);
+                        // console.log(state.selectedPO);
                         state.selectedPO.push(prepData4ListView(otd));
                     }
                 }
@@ -213,7 +233,7 @@ const mutations = {
         let arr = [];
         if (state.selectedPO.length > 0) {
             state.selectedPO.forEach(spo => {
-               // console.log('state.postOffice');
+                // console.log('state.postOffice');
                 state.postOffices.forEach(el => {
                     if (el.postalCode === spo.postalCode) {
                         arr.push(prepData4ListView(el));

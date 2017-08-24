@@ -36,7 +36,7 @@ export default {
             console.log(this.mapCenter.status);
             if (this.mapCenter.status === 'dummy') {
                 clearMap();
-            // console.log('n', n);
+                // console.log('n', n);
                 if (n.length > 0) {
                     if (typeof (window.google) === 'object') {
                         mapRender();
@@ -88,14 +88,14 @@ function markerRemake(selectedPostalCode) {
         if (po.postalCode !== selectedPostalCode) {
             let _color = 'grey';
             let _size = 0.5;
-        /* if (po.postalCode === selectedPostalCode) {
+            /* if (po.postalCode === selectedPostalCode) {
             _color = 'red';
             _size = 0.7;
         } */
 
             let marker = new MarkerWL({
                 position: new google.maps.LatLng(po.latitude, po.longitude),
-            // map: map,
+                // map: map,
                 draggable: true,
                 raiseOnDrag: true,
                 labelContent: po.label,
@@ -104,7 +104,7 @@ function markerRemake(selectedPostalCode) {
                 labelInBackground: false,
                 icon: pinSymbol(_color, _size),
                 scaledSize: new window.google.maps.Size(50, 50),
-            // animation: window.google.maps.Animation.DROP,
+                // animation: window.google.maps.Animation.DROP,
                 postalCode: po.postalCode
             });
 
