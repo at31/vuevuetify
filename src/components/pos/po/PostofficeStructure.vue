@@ -202,6 +202,14 @@ function collectVisDataset(npo) {
             self.elements.nodes.push(node);
             self.elements.edges.push(edge);
         });
+        comp.hard = comp.hard || [];
+        comp.hard.forEach((app, indx) => {
+            let addedprms = app.addedprms === undefined ? [] : app.addedprms.map(prm => prm);
+            let node = {id: app.id, indx: indx, type: 'soft', label: app.title, description: app.description, compid: comp.id, compname: comp.title, shape: 'image', image: '../static/soft.svg', addedprms: addedprms};
+            let edge = {from: app.id, to: comp.id};
+            self.elements.nodes.push(node);
+            self.elements.edges.push(edge);
+        });
     });
     self.elements.nodes = new vis.DataSet(self.elements.nodes);
     self.elements.edges = new vis.DataSet(self.elements.edges);
