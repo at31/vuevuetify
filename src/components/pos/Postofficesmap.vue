@@ -79,24 +79,24 @@ function setMark() {
 function customBCBL() {
     console.log(ymaps.templateLayoutFactory);
     var myBalloonContentBodyLayout = ymaps.templateLayoutFactory.createClass(
-            '<p>$[properties.data.postalCode]</p><p>$[properties.data.addressSource]</p><p>$[properties.data.typeCode]</p><p>кол-во заявок $[properties.data.evnts.length]</p><br /><button id="show-po-detail-btn">Подробно</button><br /><button id="add-to-path-btn">В список</button>', {
-                build: function () {
-                    myBalloonContentBodyLayout.superclass.build.call(this);
-                    var _this = this;
-                    var el = document.getElementById('show-po-detail-btn');
-                    el.addEventListener('click', function () {
-                        self.openPODetail(_this._data.properties._data.data);
-                    });
+        '<p>$[properties.data.postalCode]</p><p>$[properties.data.addressSource]</p><p>$[properties.data.typeCode]</p><p>кол-во заявок $[properties.data.evnts.length]</p><br /><button id="show-po-detail-btn">Подробно</button><br /><button id="add-to-path-btn">В список</button>', {
+            build: function () {
+                myBalloonContentBodyLayout.superclass.build.call(this);
+                var _this = this;
+                var el = document.getElementById('show-po-detail-btn');
+                el.addEventListener('click', function () {
+                    self.openPODetail(_this._data.properties._data.data);
+                });
 
-                    el = document.getElementById('add-to-path-btn');
-                    el.addEventListener('click', function () {
-                        self.addToSelectedPOList(_this._data.properties._data.data);
-                    });
-                },
-                clear: function () {
-                    myBalloonContentBodyLayout.superclass.clear.call(this);
-                }
-            });
+                el = document.getElementById('add-to-path-btn');
+                el.addEventListener('click', function () {
+                    self.addToSelectedPOList(_this._data.properties._data.data);
+                });
+            },
+            clear: function () {
+                myBalloonContentBodyLayout.superclass.clear.call(this);
+            }
+        });
     return myBalloonContentBodyLayout;
 }
 

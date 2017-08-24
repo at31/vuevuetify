@@ -28,10 +28,10 @@ export default {
         if (this._path.length > 0 & this._path.length < 23) {
             this.error = false;
             if (typeof (window.google) === 'object') {
-               // mapRender();
+                // mapRender();
             } else {
                 window.addEventListener('gmaploaded', function (e) {
-                   // mapRender();
+                    // mapRender();
                 }, false);
             }
         } else if (this._path.length >= 23) {

@@ -183,7 +183,7 @@ export default {
                 description: this.comp.description,
                 indx: this.comp.indx
             };
-            this.$store.commit('UPDATE_HARD', ho);
+            this.$store.commit('UPDATE_COMP', ho);
         },
         confirmDelBtn() {
 

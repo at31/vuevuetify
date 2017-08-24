@@ -59,11 +59,11 @@
         },
         mounted() {
             this.userProps = [
-              {name: 'email', value: '', conf: false},
-              {name: 'pass', value: '', conf: false},
-              {name: 'login', value: '', conf: false},
-              {name: 'role', value: '', conf: false},
-              {name: 'fio', value: '', conf: false}
+                {name: 'email', value: '', conf: false},
+                {name: 'pass', value: '', conf: false},
+                {name: 'login', value: '', conf: false},
+                {name: 'role', value: '', conf: false},
+                {name: 'fio', value: '', conf: false}
             ];
         },
         watch: {
