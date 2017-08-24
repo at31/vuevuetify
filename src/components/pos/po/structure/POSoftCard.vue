@@ -28,7 +28,7 @@
                   label="Название"
                   id="title"
                   prepend-icon="dvr"
-                  v-model="soft.title" 
+                  v-model="soft.label" 
                   ></v-text-field>
             </v-flex>
          </v-layout>
@@ -46,7 +46,28 @@
                   ></v-text-field>
             </v-flex>
          </v-layout>
-                                 
+          <v-layout row v-for="(prop, indx) in addPrms" :key="prop.id">
+           <v-flex xs2>
+           <v-text-field                  
+                  v-model="prop.name" 
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.title" 
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.value" 
+                  ></v-text-field>         
+         </v-flex>
+         <v-flex xs1>
+              <v-btn icon class="red--text text--darken-4" @click.native="deleteProp(indx)">
+                  <v-icon>delete</v-icon>
+                </v-btn>       
+          </v-flex>
+        </v-layout>                        
       </v-card-text>
 
       <v-card-text v-if="!edit">
@@ -92,10 +113,35 @@
                   ></v-text-field>
             </v-flex>
          </v-layout>
-                                 
+          <v-layout row v-for="(prop, indx) in addPrms" :key="prop.id">
+           <v-flex xs2>
+           <v-text-field                  
+                  v-model="prop.name" 
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.title" 
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.value" 
+                  ></v-text-field>         
+         </v-flex>
+         <v-flex xs1>
+              
+          </v-flex>
+        </v-layout>                       
       </v-card-text>  
 
       <v-divider></v-divider>
+      <v-card-row actions actions v-if="edit">
+          <v-btn @click.native="addNewProp" success light class="mr-2 green ">
+            <v-icon light>add</v-icon>
+            Добавить свойство
+        </v-btn>  
+      </v-card-row>
       <v-card-row actions v-if="edit">
              <v-btn @click.native="confirmChngBtn" primary light >
             <v-icon light>done</v-icon>
@@ -122,6 +168,7 @@ export default {
     data() {
         return {
             newSoft: {},
+            addPrms: [],
             edit: false,
             del: false,
             info: false,
@@ -141,8 +188,13 @@ export default {
                 this.info = true;
                 break;
         }
+        this.addPrms = this.soft.addedprms;
     },
     watch: {
+        soft: function () {
+            this.addPrms = this.soft.addedprms;
+            console.log(this.addPrms);
+        }
     },
     computed: {
         soft() {
@@ -151,6 +203,15 @@ export default {
     },
     methods: {
         confirmChngBtn() {
+            const so = {
+                addedprms: this.addPrms,
+                id: this.soft.id,
+                title: this.soft.label,
+                description: this.soft.description,
+                indx: this.soft.indx,
+                compid: this.soft.compid
+            };
+            this.$store.commit('UPDATE_SOFT', so);
         },
         confirmDelBtn() {
         },
@@ -164,6 +225,12 @@ export default {
         },
         newCompTrigger() {
             this.showAddNew = true;
+        },
+        addNewProp() {
+            this.addPrms.push({name: '', title: '', value: ''});
+        },
+        deleteProp(indx) {
+            this.addPrms.splice(indx, 1);
         }
     }
 };

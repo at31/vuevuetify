@@ -12,7 +12,7 @@
       window.ymapsloaded=false;
       function initMap() {
         var event = new Event('ymapsloaded');
-      window.dispatchEvent(event);
+      document.body.dispatchEvent(event);
       window.ymapsloaded=true;
       }
     </script>

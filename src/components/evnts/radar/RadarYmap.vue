@@ -17,13 +17,14 @@ export default {
     },
     mounted() {
         self = this;
-        if (window.ymapsloaded) {
+        if (window.ymaps.Map !== undefined) {
             mapRender();
         } else {
-            window.addEventListener('ymapsloaded', function (e) {
+            let handler = () => {
+                document.body.removeEventListener('ymapsloaded', handler, false);
                 mapRender();
-                window.removeEventListener('ymapsloaded');
-            }, false);
+            };
+            document.body.addEventListener('ymapsloaded', handler, false);
         }
     },
     beforeDestroy() {

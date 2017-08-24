@@ -6,7 +6,7 @@
         </v-card-title>
     </v-card-row>
     <v-list three-line class="polist">
-          <v-list-item v-for="(po, index) in selectedPO" v-bind:key="po._id">
+          <v-list-item v-for="(po, index) in selectedPO" v-bind:key="po.id">
             <v-list-tile avatar>
               <v-list-tile-action>
                 <!--v-checkbox v-model="po.fixed" @change="fixedPO(po)"></v-checkbox-->
@@ -53,7 +53,7 @@
 <script>
 
 export default {
-    name: 'pofilter',
+    name: 'posofficesselectedlist',
     components: {
 
     },
@@ -64,7 +64,6 @@ export default {
         };
     },
     mounted() {
-
     },
     watch: {
         selectedPO: function (n, o) {

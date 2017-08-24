@@ -23,13 +23,14 @@ export default {
     mounted() {
         console.log('ygmap mounted');
         self = this;
-        if (window.ymaps !== undefined) {
+        if (window.ymaps.Map !== undefined) {
             mapRender();
         } else {
-            window.addEventListener('ymapsloaded', function (e) {
-                window.removeEventListener('ymapsloaded');
+            let handler = () => {
+                document.body.removeEventListener('ymapsloaded', handler, false);
                 mapRender();
-            }, false);
+            };
+            document.body.addEventListener('ymapsloaded', handler, false);
         }
     },
     beforeDestroy() {
@@ -53,7 +54,6 @@ export default {
 
     }
 };
-
 function createPath() {
     if ((typeof _route) === 'object') {
         mymap.geoObjects.remove(_route);
@@ -65,21 +65,21 @@ function createPath() {
         };
     });
     window.ymaps.route(pathArr).then(
-                    function (route) {
-                        mymap.geoObjects.add(route);
-                        _route = route;
-                        mymap.geoObjects.add(route);
-                        var points = route.getWayPoints();
-                        points.options.set('preset', 'islands#blueStretchyIcon');
-                        points.each(function (el, i) {
-                            el.properties.set('iconContent', self.currList.path[i].postalCode + ' точка №' + (i + 1));
-                            el.properties.set('balloonContent', self.currList.path[i].postalCode + ' точка №' + (i + 1));
-                        });
-                    },
-                    function (error) {
-                        alert('Возникла ошибка: ' + error.message);
-                    }
-                );
+        function (route) {
+            mymap.geoObjects.add(route);
+            _route = route;
+            mymap.geoObjects.add(route);
+            var points = route.getWayPoints();
+            points.options.set('preset', 'islands#blueStretchyIcon');
+            points.each(function (el, i) {
+                el.properties.set('iconContent', self.currList.path[i].postalCode + ' точка №' + (i + 1));
+                el.properties.set('balloonContent', self.currList.path[i].postalCode + ' точка №' + (i + 1));
+            });
+        },
+        function (error) {
+            alert('Возникла ошибка: ' + error.message);
+        }
+    );
 }
 /*
 function clearMap() {

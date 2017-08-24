@@ -39,17 +39,17 @@ const actions = {
     preevntFilter(context, fstr) {
         let filter = {match: JSON.parse(fstr)};
         axios.post('http://127.0.0.1:3000/pre-evnt/search', filter)
-                 .then(response => {
-                     if (response.status === 200) {
-                         console.log('pre evnts loaded');
-                         context.commit('SET_CURR_PREEVENT', currEvntToDefault());
-                         context.commit('PREEVENTS_LOADED', response.data);
-                     }
-                 })
-                 .catch(e => {
-                     console.log('ошибка загрузки заявок $err', err);
-                     context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка загрузки заданий'});
-                 });
+            .then(response => {
+                if (response.status === 200) {
+                    console.log('pre evnts loaded');
+                    context.commit('SET_CURR_PREEVENT', currEvntToDefault());
+                    context.commit('PREEVENTS_LOADED', response.data);
+                }
+            })
+            .catch(e => {
+                console.log('ошибка загрузки заявок $err', err);
+                context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка загрузки заданий'});
+            });
     },
     onRadarSocketIO(context) {
         context.socket = io.connect('http://localhost:3000');
@@ -68,17 +68,17 @@ const actions = {
     },
     loadAllPreEvents(context) {
         axios.get('http://127.0.0.1:3000/pre-evnt')
-                 .then(response => {
-                     if (response.status === 200) {
-                         console.log('pre evnts loaded');
-                         context.commit('SET_CURR_PREEVENT', currEvntToDefault());
-                         context.commit('PREEVENTS_LOADED', response.data);
-                     }
-                 })
-                 .catch(e => {
-                     console.log('ошибка загрузки заявок $err', err);
-                     context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка загрузки заданий'});
-                 });
+            .then(response => {
+                if (response.status === 200) {
+                    console.log('pre evnts loaded');
+                    context.commit('SET_CURR_PREEVENT', currEvntToDefault());
+                    context.commit('PREEVENTS_LOADED', response.data);
+                }
+            })
+            .catch(e => {
+                console.log('ошибка загрузки заявок $err', err);
+                context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка загрузки заданий'});
+            });
     },
     saveNewEventFromPre(context, nevnt) {
         let evntarr = [];
@@ -86,15 +86,15 @@ const actions = {
         if (evntarr.length > 0) {
             console.log('send axios post');
             axios.post('http://127.0.0.1:3000/evnt/save/multi', evntarr)
-                 .then(response => {
-                     console.log('new event  $response', response);
-                     context.commit('INFO_SNACKBAR', {show: true, context: 'success', text: 'Новое задание создано'});
-                     context.dispatch('deletePreEvent', nevnt);
-                 })
-                 .catch(e => {
-                     console.log('ошибка создания задания $err', err);
-                     context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка создания задания'});
-                 });
+                .then(response => {
+                    console.log('new event  $response', response);
+                    context.commit('INFO_SNACKBAR', {show: true, context: 'success', text: 'Новое задание создано'});
+                    context.dispatch('deletePreEvent', nevnt);
+                })
+                .catch(e => {
+                    console.log('ошибка создания задания $err', err);
+                    context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка создания задания'});
+                });
         }
     },
     deletePreEvent(context, event) {
@@ -126,6 +126,7 @@ const mutations = {
     },
     PREEVENTS_LOADED(state, data) {
         state.preevnts = data.map(event => {
+            console.log(event.start);
             return {
                 id: event._id,
                 label: event.title,

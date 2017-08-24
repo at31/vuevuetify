@@ -8,7 +8,7 @@ let mymap = {};
 let geoCollection = {removeAll: function () { return true; }};
 
 export default {
-    name: 'pogmap',
+    name: 'poYmap',
     components: {
     },
     data() {
@@ -18,13 +18,14 @@ export default {
     },
     mounted() {
         self = this;
-        if (window.ymapsloaded) {
+        if (window.ymaps.Map !== undefined) {
             mapRender();
         } else {
-            window.addEventListener('ymapsloaded', function (e) {
-                window.removeEventListener('ymapsloaded');
+            let handler = () => {
+                document.body.removeEventListener('ymapsloaded', handler, false);
                 mapRender();
-            }, false);
+            };
+            document.body.addEventListener('ymapsloaded', handler, false);
         }
     },
     beforeDestroy() {
@@ -36,7 +37,6 @@ export default {
     },
     watch: {
         selectedPO: function (n, o) {
-            console.log('whatch', n, o);
             if (n.length > 0) {
                 if (window.ymapsloaded) {
                     createMarks();

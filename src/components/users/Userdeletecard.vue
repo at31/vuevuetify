@@ -4,10 +4,27 @@
     <v-card-title><span class="">Удаление пользователя</span></v-card-title>
             </v-card-row>
     <v-card-text>
-        <h4>_id: {{currUser._id}}</h4>
-        <h4>email: {{currUser.email}}</h4>
-        <h4>login: {{currUser.login}}</h4>
-        <h4>ФИО: {{currUser.fio}}</h4>
+       <v-layout row v-for="(prop, indx) in userProps" :key="prop.id">
+          <v-flex xs4>            
+            <v-text-field 
+              name=""
+              label=""
+              id=""
+              v-model="prop.name" 
+            ></v-text-field>
+          </v-flex>
+          <v-flex xs7>            
+            <v-text-field 
+              name=""
+              label=""
+              id=""
+              v-model="prop.value" 
+            ></v-text-field>
+          </v-flex>
+          <v-flex xs1>
+
+          </v-flex>
+        </v-layout>
     </v-card-text>        
             <v-divider></v-divider>
         <v-card-row actions>
@@ -24,11 +41,34 @@
         name: 'userDetailCard',
         data() {
             return {
+                userProps: [],
+                newUser: {}
             };
         },
         mounted() {
+            for (let prop in this.currUser) {
+                let conf = Object.getOwnPropertyDescriptor(this.currUser, prop);
+                this.userProps.push(
+                    {
+                        name: prop,
+                        value: this.currUser[prop],
+                        conf: conf.configurable
+                    });
+            }
         },
         watch: {
+            currUser: function (n) {
+                this.userProps = [];
+                for (let prop in n) {
+                    let conf = Object.getOwnPropertyDescriptor(n, prop);
+                    this.userProps.push(
+                        {
+                            name: prop,
+                            value: n[prop],
+                            conf: conf.configurable
+                        });
+                }
+            }
         },
         computed: {
             currUser() {
@@ -37,7 +77,11 @@
         },
         methods: {
             confirmDeleteBtn() {
-                this.$store.dispatch('deleteUser', this.currUser);
+                this.userProps.forEach(prop => {
+                    this.newUser[prop.name] = prop.value;
+                });
+                this.newUser._id = this.currUser._id;
+                this.$store.dispatch('deleteUser', this.newUser);
             }
         }
     };

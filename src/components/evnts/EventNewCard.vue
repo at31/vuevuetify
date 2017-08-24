@@ -200,8 +200,13 @@ export default {
     },
     methods: {
         confirmNewBtn() {
-            this.newEvent.start = moment(this.dateBegin + ' ' + this.timeBegin).toDate();
-            this.newEvent.end = moment(this.dateEnd + ' ' + this.timeEnd).toDate();
+            this.newEvent.endDate = false;
+            this.newEvent.endDesc = '';
+            this.newEvent.start = moment(this.dateBegin + ' ' + this.timeBegin, 'YYYY-MM-DD HH:mm').toDate();
+            this.newEvent.end = moment(this.dateEnd + ' ' + this.timeEnd, 'YYYY-MM-DD HH:mm').toDate();
+            console.log('this.newEvent', this.newEvent);
+            console.log('dateBegin', this.dateBegin);
+            console.log('timeBegin', this.timeBegin);
             this.$store.dispatch('saveNewEvent', this.newEvent);
         }
     }

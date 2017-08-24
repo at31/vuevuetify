@@ -208,7 +208,7 @@ export default {
         this.dateEnd = this.newEvent.end.format('YYYY-MM-DD');
         this.timeBegin = this.newEvent.start.format('HH:mm');
         this.timeEnd = this.newEvent.end.format('HH:mm');
-           /*  timeBegin: '',
+        /*  timeBegin: '',
             dateEnd: '',
             timeEnd: '', */
     },

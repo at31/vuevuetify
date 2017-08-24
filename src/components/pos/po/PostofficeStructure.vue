@@ -20,7 +20,7 @@ export default {
             },
             options: {},
             cy: {},
-            vis: ''
+            vis: {destroy: () => { true; }}
         };
     },
     mounted() {
@@ -99,14 +99,13 @@ export default {
             }
         });
         */
-
+        console.log('vis po', this.po);
         collectVisDataset(this.po);
 // create a network
         var container = document.getElementById('cy');
         this.vis = new vis.Network(container, this.elements, this.options);
         this.vis.on('click', function (params) {
             let ndata = self.elements.nodes.get(params.nodes[0]);
-            console.log(ndata);
             switch (ndata.type) {
                 case 'po':
                     console.log('po');
@@ -141,14 +140,43 @@ export default {
     },
     watch: {
         po: function (npo) {
-           // console.log('change soft');
+            // console.log('change soft');
             // collectCYElements(this.po);
             // this.cy.add(this.elements);
+            // this.elements = null;
+            this.vis.destroy();
+            collectVisDataset(npo);
+// create a network
+            var container = document.getElementById('cy');
+            this.vis = new vis.Network(container, this.elements, this.options);
+            this.vis.on('click', function (params) {
+                let ndata = self.elements.nodes.get(params.nodes[0]);
+                switch (ndata.type) {
+                    case 'po':
+                        console.log('po');
+                        break;
+                    case 'comp':
+                        ndata.show = true;
+                        self.$store.commit('SET_CURR_SOFT', {show: false});
+                        self.$store.commit('SET_CURR_COMP', ndata);
+                        self.$store.commit('SET_NEW_COMP', {show: false});
+                        self.$store.commit('SET_NEW_SOFT', {show: false});
+                        break;
+                    case 'soft':
+                        ndata.show = true;
+                        self.$store.commit('SET_CURR_COMP', {show: false});
+                        self.$store.commit('SET_CURR_SOFT', ndata);
+                        self.$store.commit('SET_NEW_COMP', {show: false});
+                        self.$store.commit('SET_NEW_SOFT', {show: false});
+                        break;
+                }
+            });
         }
     },
     computed: {
         po() {
-            return Object.assign({}, this.$store.state.po.currPO);
+            // return Object.assign({}, this.$store.state.po.currPO);
+            return this.$store.state.po.currPO;
         }
     },
     methods: {
@@ -160,13 +188,24 @@ function collectVisDataset(npo) {
     self.elements.nodes = [];
     self.elements.edges = [];
     self.elements.nodes.push({id: npo.postalCode, label: npo.postalCode, type: 'po', shape: 'image', image: '../static/po.svg'});
-    npo.comps.forEach(comp => {
-        let node = {id: comp.id, type: 'comp', label: comp.title, description: comp.description, shape: 'image', image: '../static/comp.svg'};
+    npo.comps.forEach((comp, indx) => {
+        let _addedprms = comp.addedprms === undefined ? [] : comp.addedprms.map(prm => prm);
+        let node = {id: comp.id, indx: indx, type: 'comp', label: comp.title, description: comp.description, shape: 'image', image: '../static/comp.svg', addedprms: _addedprms};
         let edge = {from: comp.id, to: npo.postalCode};
         self.elements.nodes.push(node);
         self.elements.edges.push(edge);
-        comp.soft.forEach(app => {
-            let node = {id: app.id, type: 'soft', label: app.title, description: app.description, compname: comp.title, shape: 'image', image: '../static/soft.svg'};
+        console.log('soft', comp.soft, comp.id);
+        comp.soft.forEach((app, indx) => {
+            let addedprms = app.addedprms === undefined ? [] : app.addedprms.map(prm => prm);
+            let node = {id: app.id, indx: indx, type: 'soft', label: app.title, description: app.description, compid: comp.id, compname: comp.title, shape: 'image', image: '../static/soft.svg', addedprms: addedprms};
+            let edge = {from: app.id, to: comp.id};
+            self.elements.nodes.push(node);
+            self.elements.edges.push(edge);
+        });
+        comp.hard = comp.hard || [];
+        comp.hard.forEach((app, indx) => {
+            let addedprms = app.addedprms === undefined ? [] : app.addedprms.map(prm => prm);
+            let node = {id: app.id, indx: indx, type: 'soft', label: app.title, description: app.description, compid: comp.id, compname: comp.title, shape: 'image', image: '../static/soft.svg', addedprms: addedprms};
             let edge = {from: app.id, to: comp.id};
             self.elements.nodes.push(node);
             self.elements.edges.push(edge);
@@ -174,7 +213,6 @@ function collectVisDataset(npo) {
     });
     self.elements.nodes = new vis.DataSet(self.elements.nodes);
     self.elements.edges = new vis.DataSet(self.elements.edges);
-    console.log(self.elements);
 }
 
 /*

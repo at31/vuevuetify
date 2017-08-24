@@ -14,7 +14,7 @@
                   label="Название"
                   id="title"
                   prepend-icon="dvr"
-                  v-model="comp.title" 
+                  v-model="comp.label" 
                   ></v-text-field>
             </v-flex>
          </v-layout>
@@ -32,7 +32,28 @@
                   ></v-text-field>
             </v-flex>
          </v-layout>
-                                 
+         <v-layout row v-for="(prop, indx) in addPrms" :key="prop.id">
+           <v-flex xs2>
+           <v-text-field                  
+                  v-model="prop.name" 
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.title" 
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.value" 
+                  ></v-text-field>         
+         </v-flex>
+         <v-flex xs1>
+              <v-btn icon class="red--text text--darken-4" @click.native="deleteProp(indx)">
+                  <v-icon>delete</v-icon>
+                </v-btn>       
+          </v-flex>
+        </v-layout> 
       </v-card-text>
 
       <v-card-text v-if="!edit">
@@ -64,10 +85,35 @@
                   ></v-text-field>
             </v-flex>
          </v-layout>
-                                 
+         <v-layout row v-for="(prop, indx) in addPrms" :key="prop.id">
+           <v-flex xs2>
+           <v-text-field                  
+                  v-model="prop.name" readonly
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.title" readonly
+                  ></v-text-field>
+         </v-flex>
+         <v-flex xs4>
+           <v-text-field                  
+                  v-model="prop.value" readonly
+                  ></v-text-field>         
+         </v-flex>
+         <v-flex xs1>
+              
+          </v-flex>
+        </v-layout>                        
       </v-card-text>  
 
       <v-divider></v-divider>
+      <v-card-row actions actions v-if="edit">
+          <v-btn @click.native="addNewProp" success light class="mr-2 green ">
+            <v-icon light>add</v-icon>
+            Добавить свойство
+        </v-btn>  
+      </v-card-row>
       <v-card-row actions v-if="edit">
              <v-btn @click.native="confirmChngBtn" primary light >
             <v-icon light>done</v-icon>
@@ -94,6 +140,7 @@ export default {
     data() {
         return {
             newComp: {},
+            addPrms: [],
             edit: false,
             del: false,
             info: false,
@@ -102,6 +149,7 @@ export default {
         };
     },
     mounted() {
+        // console.log(this.comp);
         switch (this.type) {
             case 'edit':
                 this.edit = true;
@@ -113,8 +161,13 @@ export default {
                 this.info = true;
                 break;
         }
+        // this.addPrms = [];
+        this.addPrms = this.comp.addedprms.map(prm => prm);
     },
     watch: {
+        comp: function (n) {
+            this.addPrms = this.comp.addedprms.map(prm => prm);
+        }
     },
     computed: {
         comp() {
@@ -123,8 +176,17 @@ export default {
     },
     methods: {
         confirmChngBtn() {
+            const ho = {
+                addedprms: this.addPrms,
+                id: this.comp.id,
+                title: this.comp.label,
+                description: this.comp.description,
+                indx: this.comp.indx
+            };
+            this.$store.commit('UPDATE_COMP', ho);
         },
         confirmDelBtn() {
+
         },
         goDetailView() {
             this.$router.push({
@@ -136,6 +198,12 @@ export default {
         },
         newCompTrigger() {
             this.showAddNew = true;
+        },
+        addNewProp() {
+            this.addPrms.push({name: '', title: '', value: ''});
+        },
+        deleteProp(indx) {
+            this.addPrms.splice(indx, 1);
         }
     }
 };

@@ -10,7 +10,9 @@ const state = {
         end: {format: () => {}},
         status: 1,
         description: '',
-        socket: ''
+        socket: '',
+        endDate: '',
+        endDesc: ''
     },
     newEvent: {
 
@@ -27,15 +29,15 @@ const getters = {
 const actions = {
     loadAllEvents(context) {
         axios.get('http://127.0.0.1:3000/evnt')
-                 .then(response => {
-                     if (response.status === 200) {
-                         context.commit('EVENTS_LOADED', response.data);
-                     }
-                 })
-                 .catch(e => {
-                     console.log('ошибка загрузки заданий $err', err);
-                     context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка загрузки заданий'});
-                 });
+            .then(response => {
+                if (response.status === 200) {
+                    context.commit('EVENTS_LOADED', response.data);
+                }
+            })
+            .catch(e => {
+                console.log('ошибка загрузки заданий $err', err);
+                context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка загрузки заданий'});
+            });
     },
     saveNewEvent(context, nevnt) {
         let evntarr = [];
@@ -47,19 +49,20 @@ const actions = {
         if (evntarr.length > 0) {
             console.log('send axios post');
             axios.post('http://127.0.0.1:3000/evnt/save/multi', evntarr)
-                 .then(response => {
-                     console.log('new event  $response', response);
-                     context.commit('INFO_SNACKBAR', {show: true, context: 'success', text: 'Новое задание создано'});
-                     context.dispatch('loadAllEvents');
-                     context.dispatch('loadAllPO');
-                 })
-                 .catch(e => {
-                     console.log('ошибка создания задания $err', err);
-                     context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка создания задания'});
-                 });
+                .then(response => {
+                    console.log('new event  $response', response);
+                    context.commit('INFO_SNACKBAR', {show: true, context: 'success', text: 'Новое задание создано'});
+                    context.dispatch('loadAllEvents');
+                    context.dispatch('loadAllPO');
+                })
+                .catch(e => {
+                    console.log('ошибка создания задания $err', err);
+                    context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка создания задания'});
+                });
         }
     },
     updateEvent(context, event) {
+        console.log(event);
         context.commit('CARD_TYPE', 'none');
         axios.post('http://127.0.0.1:3000/evnt/update/' + event._id, event)
             .then(response => {
@@ -68,6 +71,7 @@ const actions = {
                     text: 'Задача обновлена'});
                 context.dispatch('loadAllEvents');
                 context.dispatch('loadAllPO');
+                context.dispatch('getListsAll');
             }).catch(err => {
                 console.log('ошибка изменения задачи $err', err);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'error',
@@ -115,7 +119,9 @@ const mutations = {
                 status: event.status,
                 description: event.description,
                 executor: event.executor,
-                show: true
+                show: true,
+                endDate: moment(event.endDate),
+                endDesc: event.endDesc
             };
         });
     }

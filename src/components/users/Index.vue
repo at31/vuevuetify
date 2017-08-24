@@ -20,7 +20,7 @@ import Userslist from './Userslist';
 import Userscard from './Userscard';
 import Userdeletecard from './Userdeletecard';
 import Usereditcard from './Usereditcard';
-import Usernewcard from './Usernewcard';
+import Usernewcard from './Usernewcard2';
 
 export default {
     name: 'allusers',

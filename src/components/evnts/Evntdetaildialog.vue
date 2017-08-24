@@ -18,6 +18,9 @@
             <v-text-field label="Начало" :value="currEvent.start.format('HH:mm DD-MM-YYYY')"></v-text-field>
             <v-text-field label="Окончание" :value="currEvent.end.format('HH:mm DD-MM-YYYY')"></v-text-field>                    
 
+           <v-text-field label="Статус" :value="currEvent.status"></v-text-field> 
+            <v-text-field label="Закрыт" :value="ed"></v-text-field> 
+             <v-text-field label="Описание закр." :value="currEvent.endDesc"></v-text-field> 
           <div class="modal-footer">
             <slot name="footer">
               
@@ -33,35 +36,51 @@
 </div>
 </template>
 <script>
-	export default {
-    name: 'eventDetailDialog',
-    data() {
-        return {
-            dialog: false
-        };
-    },
-    mounted() {
-    },
-    watch: {
-        showDialog: function (n) {
-            console.log(n);
-            this.dialog = n;
-        }
-    },
-    computed: {
-        currEvent() {
-            return this.$store.state.events.currEvent;
-        },
-        showDialog() {
-            return this.$store.state.events.showEventDialog;
-        }
-    },
-    methods: {
-        close() {
-            this.$store.commit('SHOW_EVENT_DIALOG', false);
-        }
+ import moment from 'moment';
 
-    }
+export default {
+     name: 'eventDetailDialog',
+     data() {
+         return {
+             dialog: false,
+             ed: ''
+         };
+     },
+     mounted() {
+         if (this.currEvent.status === 'complete') {
+             this.ed = moment(this.currEvent.endDate).format('DD-MM-YYYY HH:mm');
+         } else {
+             this.ed = 'исполняется';
+         }
+     },
+     watch: {
+         showDialog: function (n) {
+             console.log(n);
+             this.dialog = n;
+         },
+         currEvent: function (n) {
+             console.log('this.currEvent.endDesc', this.currEvent.endDesc);
+             if (this.currEvent.status === 'complete') {
+                 this.ed = moment(this.currEvent.endDate).format('DD-MM-YYYY HH:mm');
+             } else {
+                 this.ed = 'исполняется';
+             }
+         }
+     },
+     computed: {
+         currEvent() {
+             return this.$store.state.events.currEvent;
+         },
+         showDialog() {
+             return this.$store.state.events.showEventDialog;
+         }
+     },
+     methods: {
+         close() {
+             this.$store.commit('SHOW_EVENT_DIALOG', false);
+         }
+
+     }
 };
 </script>
 

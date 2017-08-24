@@ -1,9 +1,9 @@
 <template>
 <v-card>
-<v-card-row class="indigo lighten-3">
-    <v-card-title><span class="">Редактирование пользователя</span></v-card-title>
+<v-card-row class="green lighten-3">
+    <v-card-title><span class="">Новый пользователь</span></v-card-title>
             </v-card-row>
-    <v-card-text>
+    <v-card-text>        
         <v-layout row v-for="(prop, indx) in userProps" :key="prop.id">
           <v-flex xs4>
             <v-text-field v-if="!prop.conf"
@@ -20,13 +20,7 @@
             ></v-text-field>
           </v-flex>
           <v-flex xs7>
-            <v-text-field v-if="!prop.conf"
-              name=""
-              label=""
-              id=""
-              v-model="prop.value" 
-            ></v-text-field>
-            <v-text-field v-if="prop.conf"
+            <v-text-field
               name=""
               label=""
               id=""
@@ -39,7 +33,6 @@
                 </v-btn>       
           </v-flex>
         </v-layout>
-
     </v-card-text>        
             <v-divider></v-divider>
         <v-card-row actions>
@@ -47,9 +40,9 @@
             <v-icon light>add</v-icon>
             Добавить свойство
         </v-btn>        
-        <v-btn @click.native="confirmEditBtn" info light>
+        <v-btn @click.native="confirmNewBtn" success light>
             <v-icon light>done</v-icon>
-            Подтвердить изменения
+            Подтвердить создание
         </v-btn>        
         </v-card-row>  
             </v-card>
@@ -57,7 +50,7 @@
 
 <script>
     export default {
-        name: 'userEditCard',
+        name: 'userNewCard',
         data() {
             return {
                 newUser: {},
@@ -65,29 +58,17 @@
             };
         },
         mounted() {
-            // this.newUser = Object.assign({}, this.currUser);
-            for (let prop in this.currUser) {
-                let conf = Object.getOwnPropertyDescriptor(this.currUser, prop);
-                this.userProps.push(
-                    {
-                        name: prop,
-                        value: this.currUser[prop],
-                        conf: conf.configurable
-                    });
-            }
+            this.userProps = [
+                {name: 'email', value: '', conf: false},
+                {name: 'pass', value: '', conf: false},
+                {name: 'login', value: '', conf: false},
+                {name: 'role', value: '', conf: false},
+                {name: 'fio', value: '', conf: false}
+            ];
         },
         watch: {
-            currUser: function (n) {
-                this.userProps = [];
-                for (let prop in n) {
-                    let conf = Object.getOwnPropertyDescriptor(n, prop);
-                    this.userProps.push(
-                        {
-                            name: prop,
-                            value: n[prop],
-                            conf: conf.configurable
-                        });
-                }
+            currUser: function (n, o) {
+
             }
         },
         computed: {
@@ -96,16 +77,14 @@
             }
         },
         methods: {
-            confirmEditBtn() {
-                let _user = {};
+            confirmNewBtn() {
                 this.userProps.forEach(prop => {
-                    _user[prop.name] = prop.value;
+                    this.newUser[prop.name] = prop.value;
                 });
-                _user._id = this.currUser._id;
-                this.$store.dispatch('updateUser', _user);
+                this.$store.dispatch('saveNewUser', this.newUser);
             },
             addNewProp() {
-                this.userProps.push({name: 'название свойства', value: 'значение свойства', conf: true});
+                this.userProps.push({name: 'название свойства', value: 'занчение свойства', conf: true});
             },
             deleteProp(indx) {
                 console.log('deleteProp $indx', indx);

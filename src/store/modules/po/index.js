@@ -8,8 +8,8 @@ const state = {
     currPO: {
         label: '',
         postalCode: '',
-        latitude: '',
-        longitude: '',
+        latitude: 50.59,
+        longitude: 36.58,
         addressSource: '',
         region: '',
         settlement: '',
@@ -21,9 +21,11 @@ const state = {
     currComp: {show: false},
     currSoft: {show: false},
     newCompShow: {show: false},
-    newSoftShow: {show: false}
+    newSoftShow: {show: false},
+    currHard: {show: false},
+    newHardShow: {show: false}
 };
-
+// console.log('index');
 // getters
 const getters = {
     listPO: state => {
@@ -37,7 +39,7 @@ const actions = {
         axios.post('http://127.0.0.1:3000/po/new', po).then(response => {
             if (response.status === 200) {
                 context.dispatch('loadAllPO');
-                ontext.commit('INFO_SNACKBAR', {show: true, context: 'success',
+                context.commit('INFO_SNACKBAR', {show: true, context: 'success',
                     text: 'Отделение добвлено успешно'});
             }
         }).catch(err => {
@@ -47,10 +49,11 @@ const actions = {
         });
     },
     updatePO(context, po) {
+        console.log('po', po);
         axios.post('http://127.0.0.1:3000/po/update', po).then(response => {
             if (response.status === 200) {
                 context.dispatch('loadAllPO');
-                ontext.commit('INFO_SNACKBAR', {show: true, context: 'success',
+                context.commit('INFO_SNACKBAR', {show: true, context: 'success',
                     text: 'Отделение обновлено успешно'});
             }
         }).catch(err => {
@@ -63,7 +66,7 @@ const actions = {
         axios.post('http://127.0.0.1:3000/po/del', po).then(response => {
             if (response.status === 200) {
                 context.dispatch('loadAllPO');
-                ontext.commit('INFO_SNACKBAR', {show: true, context: 'success',
+                context.commit('INFO_SNACKBAR', {show: true, context: 'success',
                     text: 'Отделение удалено успешно'});
             }
         }).catch(err => {
@@ -85,14 +88,69 @@ const actions = {
 
     },
     removeFilterMap(context) {
-        const arr = state.postOffices.map((otd) => prepData4ListView(otd));
+        // const arr = state.postOffices.map((otd) => prepData4ListView(otd));
         // state.selectedPO = arr;
-        context.commit('SET_SELECTED_PO', arr);
+        // context.commit('SET_SELECTED_PO', arr);
+        state.selectedPO = [];
+        context.dispatch('loadAllPO');
+    },
+    freePOFilter(context, fstr) {
+        let filter = {match: JSON.parse(fstr)};
+        axios.post('http://127.0.0.1:3000/po/search', filter)
+            .then(response => {
+                if (response.status === 200) {
+                    console.log('pre evnts loaded');
+                    context.commit('PO_LOADED', response.data);
+                }
+            })
+            .catch(e => {
+                console.log('ошибка загрузки PO $err', err);
+                context.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'ошибка загрузки отделений'});
+            });
     }
 };
 
 // mutations
 const mutations = {
+    UPDATE_HARD(state, hard) {
+        state.currPO.hard.forEach(comp => {
+            if (comp.id === hard.compid) {
+                const i = hard.indx;
+                comp.hard[i] = hard;
+                delete comp.hard[i].indx;
+                delete comp.hard[i].compid;
+            }
+        });
+        var tcpo = state.currPO;
+        state.currPO = Object.assign({}, tcpo);
+    },
+    UPDATE_SOFT(state, soft) {
+        state.currPO.comps.forEach(comp => {
+            if (comp.id === soft.compid) {
+                const i = soft.indx;
+                comp.soft[i] = soft;
+                delete comp.soft[i].indx;
+                delete comp.soft[i].compid;
+            }
+        });
+        var tcpo = state.currPO;
+        state.currPO = Object.assign({}, tcpo);
+    },
+    UPDATE_COMP(state, hard) {
+        console.log('hard', hard);
+        const i = hard.indx;
+        hard.soft = state.currPO.comps[i].soft;
+        state.currPO.comps[i] = hard;
+        delete state.currPO.comps[i].indx;
+        var tcpo = state.currPO;
+        state.currPO = Object.assign({}, tcpo);
+    },
+    SET_NEW_HARD(state, s) {
+        state.newHardShow = s;
+    },
+    SET_CURR_HARD(state, s) {
+        state.currHard = s;
+    },
     SET_NEW_COMP(state, s) {
         state.newCompShow = s;
     },
@@ -155,11 +213,11 @@ const mutations = {
         state.postOffices.forEach((otd) => {
             let _f = filter;
             for (let k in _f) {
-               // console.dir(_f[k]);
+                // console.dir(_f[k]);
                 let res = _f[k](otd);
                 if (res) {
                     if (!state.selectedPostCodeSet.has(otd.postalCode)) {
-                                // console.log(state.selectedPO);
+                        // console.log(state.selectedPO);
                         state.selectedPO.push(prepData4ListView(otd));
                     }
                 }
@@ -175,7 +233,7 @@ const mutations = {
         let arr = [];
         if (state.selectedPO.length > 0) {
             state.selectedPO.forEach(spo => {
-               // console.log('state.postOffice');
+                // console.log('state.postOffice');
                 state.postOffices.forEach(el => {
                     if (el.postalCode === spo.postalCode) {
                         arr.push(prepData4ListView(el));
@@ -186,6 +244,13 @@ const mutations = {
             arr = pos.map((otd) => prepData4ListView(otd));
         }
         state.selectedPO = arr;
+        if (state.currPO.postalCode !== '') {
+            state.currPO = state.selectedPO.find(po => {
+                if (state.currPO.postalCode === po.postalCode) {
+                    return po;
+                }
+            });
+        }
     }
 };
 
@@ -222,10 +287,84 @@ function prepData4ListView(po) {
             return chld;
         }),
         comps: po.comps,
+        addedprms: po.addedprms || [],
         evntsLength: po.evnts.length,
         fixed: false,
         pindx: 0
     };
+    /*
+    const listel = {
+        id: {value: po._id, title: 'id'},
+        label: {value: po.postalCode, title: 'Название'},
+        postalCode: {value: po.postalCode, title: 'Индекс'},
+        latitude: {value: po.latitude, title: 'Широта'},
+        longitude: {value: po.longitude, title: 'Долгота'},
+        addressSource: {value: po.addressSource, title: 'Адрес'},
+        region: {value: po.region, title: 'Регион'},
+        settlement: {value: po.settlement, title: 'Город'},
+        evnts: po.evnts.map((o) => {
+            const chld = {
+                id: o._id,
+                label: o.title,
+                title: o.title,
+                start: moment(o.start),
+                end: moment(o.end),
+                postalCode: o.postalCode,
+                status: o.status,
+                description: o.description,
+                executor: o.executor,
+                show: true
+            };
+            return chld;
+        }),
+        comps: po.comps,
+        evntsLength: po.evnts.length,
+        fixed: false,
+        pindx: 0
+    };
+    */
+    Object.defineProperty(listel, 'id', {
+        // enumerable: false,
+        configurable: false
+    });
+    /*
+    Object.defineProperty(listel, 'evnts', {
+        enumerable: false
+    });
+    Object.defineProperty(listel, 'comps', {
+        enumerable: false
+    });
+    Object.defineProperty(listel, 'evntsLength', {
+        enumerable: false
+    });
+    Object.defineProperty(listel, 'fixed', {
+        enumerable: false
+    });
+    Object.defineProperty(listel, 'pindx', {
+        enumerable: false
+    });
 
+    Object.defineProperty(listel, 'label', {
+        configurable: false
+    });
+    Object.defineProperty(listel, 'postalCode', {
+        configurable: false
+    });
+    Object.defineProperty(listel, 'latitude', {
+        configurable: false
+    });
+    Object.defineProperty(listel, 'longitude', {
+        configurable: false
+    });
+    Object.defineProperty(listel, 'addressSource', {
+        configurable: false
+    });
+    Object.defineProperty(listel, 'region', {
+        configurable: false
+    });
+    Object.defineProperty(listel, 'settlement', {
+        configurable: false
+    });
+    */
     return listel;
 }

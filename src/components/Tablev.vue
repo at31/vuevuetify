@@ -47,13 +47,13 @@
                       sortable: false,
                       value: 'name'
                   },
-          {text: 'Calories', value: 'calories'},
-          {text: 'Fat (g)', value: 'fat'},
-          {text: 'Carbs (g)', value: 'carbs'},
-          {text: 'Protein (g)', value: 'protein'},
-          {text: 'Sodium (mg)', value: 'sodium'},
-          {text: 'Calcium (%)', value: 'calcium'},
-          {text: 'Iron (%)', value: 'iron'}
+                  {text: 'Calories', value: 'calories'},
+                  {text: 'Fat (g)', value: 'fat'},
+                  {text: 'Carbs (g)', value: 'carbs'},
+                  {text: 'Protein (g)', value: 'protein'},
+                  {text: 'Sodium (mg)', value: 'sodium'},
+                  {text: 'Calcium (%)', value: 'calcium'},
+                  {text: 'Iron (%)', value: 'iron'}
               ],
               items: [
                   {
