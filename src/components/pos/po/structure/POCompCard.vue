@@ -186,7 +186,7 @@ export default {
             this.$store.commit('UPDATE_COMP', ho);
         },
         confirmDelBtn() {
-
+            this.$store.commit('DELETE_COMP', this.comp.indx);
         },
         goDetailView() {
             this.$router.push({

@@ -112,19 +112,19 @@ export default {
                     break;
                 case 'comp':
                     ndata.show = true;
-                    this.closeAll();
+                    self.closeAll();
                     self.$store.commit('SET_CURR_COMP', ndata);
 
                     break;
                 case 'soft':
                     ndata.show = true;
-                    this.closeAll();
+                    self.closeAll();
                     self.$store.commit('SET_CURR_SOFT', ndata);
 
                     break;
                 case 'hard':
                     ndata.show = true;
-                    this.closeAll();
+                    self.closeAll();
                     self.$store.commit('SET_CURR_HARD', ndata);
                     break;
             }
@@ -160,19 +160,19 @@ export default {
                         break;
                     case 'comp':
                         ndata.show = true;
-                        this.closeAll();
+                        self.closeAll();
                         self.$store.commit('SET_CURR_COMP', ndata);
 
                         break;
                     case 'soft':
                         ndata.show = true;
-                        this.closeAll();
+                        self.closeAll();
                         self.$store.commit('SET_CURR_SOFT', ndata);
 
                         break;
                     case 'hard':
                         ndata.show = true;
-                        this.closeAll();
+                        self.closeAll();
                         self.$store.commit('SET_CURR_HARD', ndata);
                         break;
                 }

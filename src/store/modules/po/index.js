@@ -112,13 +112,31 @@ const actions = {
 
 // mutations
 const mutations = {
+    DELETE_HARD(state, hard) {
+        state.currPO.comps.forEach(comp => {
+            if (comp.id === hard.compid) {
+                comp.hard.splice(hard.indx, 1);
+            }
+        });
+        var tcpo = state.currPO;
+        state.currPO = Object.assign({}, tcpo);
+    },
     UPDATE_HARD(state, hard) {
-        state.currPO.hard.forEach(comp => {
+        state.currPO.comps.forEach(comp => {
             if (comp.id === hard.compid) {
                 const i = hard.indx;
                 comp.hard[i] = hard;
                 delete comp.hard[i].indx;
                 delete comp.hard[i].compid;
+            }
+        });
+        var tcpo = state.currPO;
+        state.currPO = Object.assign({}, tcpo);
+    },
+    DELETE_SOFT(state, soft) {
+        state.currPO.comps.forEach(comp => {
+            if (comp.id === soft.compid) {
+                comp.soft.splice(soft.indx, 1);
             }
         });
         var tcpo = state.currPO;
@@ -136,8 +154,13 @@ const mutations = {
         var tcpo = state.currPO;
         state.currPO = Object.assign({}, tcpo);
     },
+    DELETE_COMP(state, indx) {
+        state.currPO.comps.splice(indx, 1);
+        var tcpo = state.currPO;
+        state.currPO = Object.assign({}, tcpo);
+    },
     UPDATE_COMP(state, hard) {
-        console.log('hard', hard);
+        // console.log('hard', hard);
         const i = hard.indx;
         hard.soft = state.currPO.comps[i].soft;
         state.currPO.comps[i] = hard;

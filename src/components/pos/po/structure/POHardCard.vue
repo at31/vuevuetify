@@ -214,6 +214,7 @@ export default {
             this.$store.commit('UPDATE_HARD', so);
         },
         confirmDelBtn() {
+            this.$store.commit('DELETE_HARD', this.hard);
         },
         goDetailView() {
             this.$router.push({

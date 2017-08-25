@@ -214,6 +214,7 @@ export default {
             this.$store.commit('UPDATE_SOFT', so);
         },
         confirmDelBtn() {
+            this.$store.commit('DELETE_SOFT', this.soft);
         },
         goDetailView() {
             this.$router.push({

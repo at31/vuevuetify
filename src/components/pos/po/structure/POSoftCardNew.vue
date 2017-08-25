@@ -64,7 +64,7 @@
                   ></v-text-field>
             </v-flex>
          </v-layout>
-           <v-layout row v-for="(prop, indx) in addPrms" >
+           <v-layout row v-for="(prop, indx) in addPrms" key="name">
            <v-flex xs2>
            <v-text-field                  
                   v-model="prop.name" 
