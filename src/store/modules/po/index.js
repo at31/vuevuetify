@@ -23,7 +23,8 @@ const state = {
     newCompShow: {show: false},
     newSoftShow: {show: false},
     currHard: {show: false},
-    newHardShow: {show: false}
+    newHardShow: {show: false},
+    uObj: []
 };
 // console.log('index');
 // getters
@@ -31,6 +32,7 @@ const getters = {
     listPO: state => {
         return state.postOffices.map((otd) => prepData4ListView(otd));
     }
+
 };
 
 // actions
@@ -274,6 +276,36 @@ const mutations = {
                 }
             });
         }
+        let robj = {};
+        let keyArr = [];
+        console.log('state.selectedPO', state.selectedPO);
+        var ao = state.selectedPO.map(po => po.comps);
+        ao = ao.reduce(function (pc, lp) {
+            return pc.concat(lp);
+        });
+        ao = ao.map(_c => {
+            var c = Object.assign({}, _c);
+            var tr = c.soft.concat(c.hard);
+            delete c.soft;
+            delete c.hard;
+            return [c].concat(tr);
+        });
+        ao = ao.reduce(function (pc, lp) {
+            return pc.concat(lp);
+        });
+        ao.forEach(csh => {
+            if (robj[csh.id]) {
+                ++robj[csh.id];
+            } else {
+                robj[csh.id] = 1;
+            }
+        });
+        keyArr = Object.keys(robj).filter(key => robj[key] === state.selectedPO.length);
+        ao = keyArr.map(key => {
+            return ao.find(csh => csh.id === key);
+        });
+        console.log('____AO_____ ', keyArr, robj, ao);
+        state.uObj = ao;
     }
 };
 
@@ -285,6 +317,22 @@ export default {
 };
 
 function prepData4ListView(po) {
+    po.comps.forEach(c => {
+        c.tip = 'comp';
+        c.text = c.id + ' тип: комп.';
+        c.soft.forEach(s => {
+            s.tip = 'soft';
+            s.text = s.id + 'тип: ПО';
+        });
+        if (!c.hard) {
+            c.hard = [];
+        }
+        c.hard.forEach(h => {
+            h.tip = 'hard';
+            h.text = h.id + 'тип: оборуд.';
+        });
+    });
+
     const listel = {
         id: po._id,
         label: po.postalCode,
