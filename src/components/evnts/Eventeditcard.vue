@@ -30,6 +30,19 @@
                   ></v-text-field>
             </v-flex>
          </v-layout>
+         <v-layout row>
+            <v-flex xs4>
+               <v-subheader>Объект</v-subheader>
+            </v-flex>
+            <v-flex xs8>
+               <v-text-field
+                  name="evntobj"
+                  label="объект"
+                  id="evntobj"
+                  v-model="evntobj"
+                  ></v-text-field>
+            </v-flex>
+         </v-layout>
          <!--v-layout row>
             <v-flex xs4>
                <v-subheader>Исполнитель</v-subheader>
@@ -185,15 +198,18 @@ export default {
                 end: '',
                 status: 1,
                 description: ''
-            }
+            },
+            evntobj: ''
         };
     },
     created() {
+        console.log('this.events.evntobj', this.event);
         this.newEvent = Object.assign({}, this.$store.state.events.currEvent);
         this.dateBegin = this.newEvent.start.format('YYYY-MM-DD');
         this.dateEnd = this.newEvent.end.format('YYYY-MM-DD');
         this.timeBegin = this.newEvent.start.format('HH:mm');
         this.timeEnd = this.newEvent.end.format('HH:mm');
+        this.evntobj = 'id: ' + this.event.evntobj.id + ', ' + this.event.evntobj.title + ', тип: ' + this.event.evntobj.tip;
         /*  timeBegin: '',
             dateEnd: '',
             timeEnd: '', */
@@ -208,6 +224,7 @@ export default {
             this.dateEnd = this.newEvent.end.format('YYYY-MM-DD');
             this.timeBegin = this.newEvent.start.format('HH:mm');
             this.timeEnd = this.newEvent.end.format('HH:mm');
+            this.evntobj = 'id: ' + this.newEvent.evntobj.id + ', ' + this.newEvent.evntobj.title + ', тип: ' + this.newEvent.evntobj.tip;
         }
     },
     computed: {

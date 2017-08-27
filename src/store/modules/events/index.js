@@ -122,7 +122,8 @@ const mutations = {
                 executor: event.executor,
                 show: true,
                 endDate: moment(event.endDate),
-                endDesc: event.endDesc
+                endDesc: event.endDesc,
+                evntobj: event.evntobj
             };
         });
     }

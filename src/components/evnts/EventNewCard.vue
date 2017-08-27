@@ -45,6 +45,21 @@
                   ></v-select>
             </v-flex>
          </v-layout-->
+          <v-layout row>
+            <v-flex xs4>
+               <v-subheader>Объект</v-subheader>
+            </v-flex>
+            <v-flex xs8>
+               <v-select
+                  v-bind:items="uObj"
+                  v-model="newEvent.evntobj"
+                  label="Выберите объект"
+                  dark
+                  single-line
+                  item-value="newEvent.evntobj"
+                  ></v-select>
+            </v-flex>
+         </v-layout>
          <v-layout row>
             <v-flex xs4>
                <v-subheader>Дата нач.</v-subheader>
@@ -109,7 +124,7 @@
                   v-model="modal2"
                   lazy>
                   <v-text-field  slot="activator"          
-                     label="Дата начала"
+                     label="Дата зак."
                      v-model="dateEnd"
                      prepend-icon="event"
                      readonly
@@ -136,7 +151,7 @@
                   lazy
                   >
                   <v-text-field slot="activator"
-                     label="Дата начала"
+                     label="Время зак."
                      v-model="timeEnd"
                      prepend-icon="event"
                      readonly
@@ -183,7 +198,8 @@ export default {
                 start: '',
                 end: '',
                 status: 1,
-                description: ''
+                description: '',
+                evntobj: ''
             }
         };
     },
@@ -196,17 +212,19 @@ export default {
     computed: {
         users() {
             return this.$store.state.users.users;
+        },
+        uObj() {
+            return this.$store.state.po.uObj;
         }
+
     },
     methods: {
         confirmNewBtn() {
+            console.log(this.newEvent.evntobj);
             this.newEvent.endDate = false;
             this.newEvent.endDesc = '';
             this.newEvent.start = moment(this.dateBegin + ' ' + this.timeBegin, 'YYYY-MM-DD HH:mm').toDate();
             this.newEvent.end = moment(this.dateEnd + ' ' + this.timeEnd, 'YYYY-MM-DD HH:mm').toDate();
-            console.log('this.newEvent', this.newEvent);
-            console.log('dateBegin', this.dateBegin);
-            console.log('timeBegin', this.timeBegin);
             this.$store.dispatch('saveNewEvent', this.newEvent);
         }
     }
