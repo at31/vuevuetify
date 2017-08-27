@@ -1,4 +1,5 @@
 import axios from 'axios';
+import settings from '@/settings.js';
 // initial state
 const state = {
     users: [],
@@ -20,7 +21,7 @@ const getters = {
 // actions
 const actions = {
     getUsers(context) {
-        axios.get('http://127.0.0.1:3000/users/all').then(response => {
+        axios.get(settings.SERVER_ADDRESS + '/users/all').then(response => {
             if (response.status === 200) {
                 context.commit('USERS_LOADED', response.data.map((usr) => {
                     // исключаем свойства из видимости для for in...
@@ -62,7 +63,7 @@ const actions = {
     },
     saveNewUser(context, user) {
         context.commit('CARD_TYPE', 'none');
-        axios.post('http://127.0.0.1:3000/users/new', user)
+        axios.post(settings.SERVER_ADDRESS + '/users/new', user)
             .then(response => {
                 console.log('user new $response', response);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success', text: 'Новый пользователь создан'});
@@ -74,7 +75,7 @@ const actions = {
     },
     updateUser(context, _user) {
         context.commit('CARD_TYPE', 'none');
-        axios.post('http://127.0.0.1:3000/users/update', _user)
+        axios.post(settings.SERVER_ADDRESS + '/users/update', _user)
             .then(response => {
                 console.log('user update $response', response);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success', text: 'Пользователь обновлен'});
@@ -86,7 +87,7 @@ const actions = {
     },
     deleteUser(context, user) {
         context.commit('CARD_TYPE', 'none');
-        axios.post('http://127.0.0.1:3000/users/del', user)
+        axios.post(settings.SERVER_ADDRESS + '/users/del', user)
             .then(response => {
                 console.log('user deleted $response', response);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success', text: 'Пользователь удален'});

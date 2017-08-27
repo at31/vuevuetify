@@ -1,5 +1,6 @@
 import axios from 'axios';
 import moment from 'moment';
+import settings from '@/settings.js';
 
 // initial state
 const state = {
@@ -28,7 +29,7 @@ const getters = {
 // actions
 const actions = {
     loadAllEvents(context) {
-        axios.get('http://127.0.0.1:3000/evnt')
+        axios.get(settings.SERVER_ADDRESS + '/evnt')
             .then(response => {
                 if (response.status === 200) {
                     context.commit('EVENTS_LOADED', response.data);
@@ -48,7 +49,7 @@ const actions = {
         });
         if (evntarr.length > 0) {
             console.log('send axios post');
-            axios.post('http://127.0.0.1:3000/evnt/save/multi', evntarr)
+            axios.post(settings.SERVER_ADDRESS + '/evnt/save/multi', evntarr)
                 .then(response => {
                     console.log('new event  $response', response);
                     context.commit('INFO_SNACKBAR', {show: true, context: 'success', text: 'Новое задание создано'});
@@ -64,7 +65,7 @@ const actions = {
     updateEvent(context, event) {
         console.log(event);
         context.commit('CARD_TYPE', 'none');
-        axios.post('http://127.0.0.1:3000/evnt/update/' + event._id, event)
+        axios.post(settings.SERVER_ADDRESS + '/evnt/update/' + event._id, event)
             .then(response => {
                 console.log('event update $response', response);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success',
@@ -80,7 +81,7 @@ const actions = {
     },
     deleteEvent(context, event) {
         context.commit('CARD_TYPE', 'none');
-        axios.post('http://127.0.0.1:3000/evnt/tdel', event)
+        axios.post(settings.SERVER_ADDRESS + '/evnt/tdel', event)
             .then(response => {
                 console.log('event deleted $response', response);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success',

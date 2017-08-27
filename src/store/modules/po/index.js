@@ -1,5 +1,6 @@
 import axios from 'axios';
 import moment from 'moment';
+import settings from '@/settings.js';
 // initial state
 const state = {
     postOffices: [],
@@ -36,7 +37,7 @@ const getters = {
 // actions
 const actions = {
     newPO(context, po) {
-        axios.post('http://127.0.0.1:3000/po/new', po).then(response => {
+        axios.post(settings.SERVER_ADDRESS + 'po/new', po).then(response => {
             if (response.status === 200) {
                 context.dispatch('loadAllPO');
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success',
@@ -50,7 +51,7 @@ const actions = {
     },
     updatePO(context, po) {
         console.log('po', po);
-        axios.post('http://127.0.0.1:3000/po/update', po).then(response => {
+        axios.post(settings.SERVER_ADDRESS + '/po/update', po).then(response => {
             if (response.status === 200) {
                 context.dispatch('loadAllPO');
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success',
@@ -63,7 +64,7 @@ const actions = {
         });
     },
     deletePO(context, po) {
-        axios.post('http://127.0.0.1:3000/po/del', po).then(response => {
+        axios.post(settings.SERVER_ADDRESS + '/po/del', po).then(response => {
             if (response.status === 200) {
                 context.dispatch('loadAllPO');
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success',
@@ -76,7 +77,8 @@ const actions = {
         });
     },
     loadAllPO(context) {
-        axios.get('http://127.0.0.1:3000/po/all').then(response => {
+        console.log('SERVER_ADDRESS', settings.SERVER_ADDRESS);
+        axios.get(settings.SERVER_ADDRESS + '/po/all').then(response => {
             if (response.status === 200) {
                 context.commit('PO_LOADED', response.data);
             }
@@ -96,7 +98,7 @@ const actions = {
     },
     freePOFilter(context, fstr) {
         let filter = {match: JSON.parse(fstr)};
-        axios.post('http://127.0.0.1:3000/po/search', filter)
+        axios.post(settings.SERVER_ADDRESS + '/po/search', filter)
             .then(response => {
                 if (response.status === 200) {
                     console.log('pre evnts loaded');

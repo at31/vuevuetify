@@ -1,6 +1,7 @@
 import axios from 'axios';
 import moment from 'moment';
 import io from 'socket.io-client';
+import settings from '@/settings.js';
 
 // initial state
 const state = {
@@ -38,7 +39,7 @@ const getters = {
 const actions = {
     preevntFilter(context, fstr) {
         let filter = {match: JSON.parse(fstr)};
-        axios.post('http://127.0.0.1:3000/pre-evnt/search', filter)
+        axios.post(settings.SERVER_ADDRESS + '/pre-evnt/search', filter)
             .then(response => {
                 if (response.status === 200) {
                     console.log('pre evnts loaded');
@@ -52,7 +53,8 @@ const actions = {
             });
     },
     onRadarSocketIO(context) {
-        context.socket = io.connect('http://localhost:3000');
+        // context.socket = io.connect('http://localhost:3000');
+        context.socket = io.connect(settings.SERVER_ADDRESS);
         context.socket.on('mainsocket', function (data) {
             // console.log('======================socket connect========================');
             // console.log(data.data);
@@ -67,7 +69,7 @@ const actions = {
         socket.off('mainsocket');
     },
     loadAllPreEvents(context) {
-        axios.get('http://127.0.0.1:3000/pre-evnt')
+        axios.get(settings.SERVER_ADDRESS + '/pre-evnt')
             .then(response => {
                 if (response.status === 200) {
                     console.log('pre evnts loaded');
@@ -85,7 +87,7 @@ const actions = {
         evntarr.push(nevnt);
         if (evntarr.length > 0) {
             console.log('send axios post');
-            axios.post('http://127.0.0.1:3000/evnt/save/multi', evntarr)
+            axios.post(settings.SERVER_ADDRESS + '/evnt/save/multi', evntarr)
                 .then(response => {
                     console.log('new event  $response', response);
                     context.commit('INFO_SNACKBAR', {show: true, context: 'success', text: 'Новое задание создано'});
@@ -99,7 +101,7 @@ const actions = {
     },
     deletePreEvent(context, event) {
         context.commit('CARD_TYPE', 'none');
-        axios.post('http://127.0.0.1:3000/pre-evnt/del', event)
+        axios.post(settings.SERVER_ADDRESS + '/pre-evnt/del', event)
             .then(response => {
                 console.log('event deleted $response', response);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success',

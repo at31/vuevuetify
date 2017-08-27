@@ -1,5 +1,6 @@
 import axios from 'axios';
 import moment from 'moment';
+import settings from '@/settings.js';
 
 moment().locale('ru');
 // initial state
@@ -55,7 +56,7 @@ const actions = {
         _list.path = _list.path.map(l => l.postalCode);
         _list.evnts = _list.evnts.map(l => l._id);
         console.log('list for update', list);
-        axios.post('http://127.0.0.1:3000/lists/update', _list)
+        axios.post(settings.SERVER_ADDRESS + '/lists/update', _list)
             .then(response => {
                 console.log('list updated $response', response);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success',
@@ -69,7 +70,7 @@ const actions = {
     },
     deleteList(context, list) {
         console.log(list);
-        axios.post('http://127.0.0.1:3000/lists/del', list)
+        axios.post(settings.SERVER_ADDRESS + '/lists/del', list)
             .then(response => {
                 console.log('list deleted $response', response);
                 ontext.commit('INFO_SNACKBAR', {show: true, context: 'success',
@@ -97,7 +98,7 @@ const actions = {
         context.state.newList.endDate = false;
         context.state.newList.endDesc = '';
         context.state.newList.status = 'open';
-        axios.post('http://127.0.0.1:3000/lists/new', context.state.newList)
+        axios.post(settings.SERVER_ADDRESS + '/lists/new', context.state.newList)
             .then(response => {
                 console.log('new lists saved $response', response);
                 context.commit('INFO_SNACKBAR', {show: true, context: 'success',
@@ -126,7 +127,7 @@ const actions = {
 
     getListsAll(context, filter) {
         // console.log('dispatch getListsAll command');
-        axios.get('http://127.0.0.1:3000/lists/all').then(response => {
+        axios.get(settings.SERVER_ADDRESS + '/lists/all').then(response => {
             if (response.status === 200) {
                 const data = response.data;
                 data.forEach(list => {
