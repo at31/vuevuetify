@@ -40,12 +40,19 @@
 
         <v-divider></v-divider>
         <v-card-row actions>
-        
+        <v-btn @click.native="pdfCreate" default>
+            <v-icon>picture_as_pdf</v-icon>
+            Печать списка
+        </v-btn>        
         </v-card-row>          
         </v-card>  
 </template>
 
 <script>
+import moment from 'moment';
+
+moment().locale('ru');
+
 export default {
     name: 'eventpolist',
     components: {
@@ -92,6 +99,36 @@ export default {
             console.log('edit btn');
             this.$store.commit('SET_CURR_EVENT', event);
             this.$store.commit('CARD_TYPE_EVENT', 'edit');
+        },
+        pdfCreate() {
+            var elist = this.list.map(list => {
+                return 'Заголовок: ' + list.title + '\n Описание:' + list.description + '\n Начало:' + moment(list.start).format('HH:mm DD-MM-YYYY') + '\n Окончание:' + moment(list.end).format('HH:mm DD-MM-YYYY') + '\n Статус:' + list.status + '\n Объект: ' + list.evntobj.id;
+            });
+
+            var dd = {
+                content: [
+                    {
+                        text: 'Задачи',
+                        style: 'header',
+                        alignment: 'center'
+                    },
+                    {
+                        ol: elist
+                    },
+                    {
+                        text: 'Всего задач: ' + this.list.length,
+                        style: 'header'
+                    }
+                ],
+                styles: {
+                    header: {
+                        fontSize: 18,
+                        bold: true,
+                        alignment: 'justify'
+                    }
+                }
+            };
+            pdfMake.createPdf(dd).open();
         }
 
     }

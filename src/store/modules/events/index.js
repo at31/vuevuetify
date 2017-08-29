@@ -19,7 +19,8 @@ const state = {
 
     },
     showEventDialog: false,
-    cardType: 'info'
+    cardType: 'info',
+    filter: false
 };
 
 // getters
@@ -93,11 +94,26 @@ const actions = {
                 context.commit('INFO_SNACKBAR', {show: true, context: 'error',
                     text: 'ошибка удаления задачи'});
             });
+    },
+    filterEvents(context, filter) {
+        axios.post(settings.SERVER_ADDRESS + '/evnt/search', filter)
+        .then(res => {
+            if (res.status === 200) {
+                context.commit('EVENTS_LOADED', res.data);
+            }
+        }).catch(err => {
+            console.log('ошибка поиска задач $err', err);
+            context.commit('INFO_SNACKBAR', {show: true, context: 'error',
+                text: 'ошибка поиска задач'});
+        });
     }
 };
 
 // mutations
 const mutations = {
+    EVENTS_FILTER(state, filter) {
+        state.filter = filter;
+    },
     SHOW_EVENT_DIALOG(state, st) {
         state.showEventDialog = st;
     },
@@ -109,6 +125,8 @@ const mutations = {
         state.cardType = type;
     },
     EVENTS_LOADED(state, events) {
+        console.log(events.length);
+        state.events = [];
         state.events = events.map(event => {
             return {
                 id: event._id,

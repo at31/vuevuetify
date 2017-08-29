@@ -31,7 +31,8 @@ const state = {
         evnts: []
     },
     cardTypeLists: '',
-    currEvnt: {}
+    currEvnt: {},
+    filter: false
 
 };
 
@@ -171,11 +172,50 @@ const actions = {
         }).catch(err => {
             console.log('ошибка загрузки всех списков $err', err);
         });
+    },
+    filterList(context, filter) {
+        axios.post(settings.SERVER_ADDRESS + '/lists/search', filter).then(response => {
+            if (response.status === 200) {
+                const data = response.data;
+                data.forEach(list => {
+                    list.listsAllEvnts = list.evnts.length;
+
+                    const set = new Set();
+                    list.evnts.forEach(evnt => {
+                        evnt.start = moment(evnt.start);
+                        evnt.end = moment(evnt.end);
+                        set.add(evnt.postalCode);
+                    });
+                    list.listsAllPOs = set.size;
+                    list.strEndDate = list.endDate ? moment(list.endDate).format('DD-MM-YYYY HH:mm') : 'открыт';
+                    list.endDesc = list.endDesc || '';
+                    // исключаем свойства из видимости для for in...
+                    Object.defineProperty(list.executor, 'selected', {
+                        value: false,
+                        enumerable: false
+                    });
+                    Object.defineProperty(list.executor, 'text', {
+                        value: list.executor.fio,
+                        enumerable: false
+                    }); // for vuetify select "Item object is required to have a text property"
+                    Object.defineProperty(list.executor, '_id', {
+                        enumerable: false,
+                        configurable: false
+                    });
+                });
+                context.commit('LISTS_LOADED', data);
+            }
+        }).catch(err => {
+            console.log('ошибка загрузки всех списков $err', err);
+        });
     }
 };
 
 // mutations
 const mutations = {
+    LISTS_FILTER(state, st) {
+        state.filter = st;
+    },
     SHOW_LIST_EVNT_DIALOG(state, showDialog) {
         state.showListEvntDialog = showDialog;
     },

@@ -109,6 +109,7 @@
                 }); */
             },
             pdfCreate() {
+                console.log(this.fNewList.evnts);
                 var dd = {
                     content: [
                         {

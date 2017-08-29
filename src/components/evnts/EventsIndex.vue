@@ -5,6 +5,10 @@
                 <v-icon>event</v-icon>
                 Новая задача
                 </v-btn>
+                <v-btn @click.native="showFilter" light success class="">
+                <v-icon>search</v-icon>
+                Фильтр
+                </v-btn>
           </v-flex> 
           <v-flex xs12 md6 sm12 class="r-list">
                 <eventslist></eventslist>                        
@@ -13,6 +17,7 @@
                 <eventscard v-if="cardType==='info'"></eventscard>
                 <eventdeletecard v-if="cardType==='delete'"></eventdeletecard>
                 <eventeditcard v-if="cardType==='edit'"></eventeditcard>
+                <evntfilter v-if="filter"></evntfilter>
           </v-flex>
     </v-layout>  
 </template>
@@ -22,6 +27,7 @@ import Eventslist from './EventsList';
 import Eventscard from './Eventscard';
 import Eventdeletecard from './Eventdeletecard';
 import Eventeditcard from './Eventeditcard';
+import Evntfilter from './EvntFilter';
 
 export default {
     name: 'allevent',
@@ -29,7 +35,8 @@ export default {
         Eventslist,
         Eventscard,
         Eventdeletecard,
-        Eventeditcard
+        Eventeditcard,
+        Evntfilter
     },
     data() {
         return {
@@ -53,8 +60,14 @@ export default {
         }
     },
     computed: {
+        filter() {
+            return this.$store.state.events.filter;
+        }
     },
     methods: {
+        showFilter() {
+            this.$store.commit('EVENTS_FILTER', !this.filter);
+        },
         onAddBtn() {
             this.$router.push({
                 path: '/event-new',

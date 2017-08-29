@@ -5,6 +5,10 @@
                 <v-icon>list</v-icon>
                 Новый список
                 </v-btn>
+                <v-btn @click.native="showFilter" light success class="">
+                <v-icon>search</v-icon>
+                Фильтр
+                </v-btn>
           </v-flex> 
           <v-flex xs12 md4 sm12 class="r-list">
                 <listslist></listslist>                        
@@ -12,7 +16,8 @@
           <v-flex xs12 md4 sm12 class="r-list">
                 <listinfo v-if="cardType==='info'"></listinfo>
                 <listedit v-if="cardType==='edit'"></listedit>
-                <listdelete v-if="cardType==='delete'"></listdelete>                
+                <listdelete v-if="cardType==='delete'"></listdelete>
+                <listfilter v-if="filter"></listfilter>                
           </v-flex>
           <v-flex xs12 md4 sm12 class="r-list">
               <pathgmap ></pathgmap>
@@ -26,6 +31,7 @@ import Listinfo from './ListInfo';
 import Listedit from './ListEdit';
 import Listdelete from './ListDelete';
 import Pathgmap from './ListPathYMap';
+import Listfilter from './ListFilter';
 
 
 export default {
@@ -35,7 +41,8 @@ export default {
         Pathgmap,
         Listinfo,
         Listedit,
-        Listdelete
+        Listdelete,
+        Listfilter
     },
     data() {
         return {
@@ -60,9 +67,15 @@ export default {
     computed: {
         cardType() {
             return this.$store.state.lists.cardTypeLists;
+        },
+        filter() {
+            return this.$store.state.lists.filter;
         }
     },
     methods: {
+        showFilter() {
+            this.$store.commit('LISTS_FILTER', !this.filter);
+        },
         onAddBtn() {
             this.$router.push({
                 path: '/list-new',
