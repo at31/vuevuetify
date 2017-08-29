@@ -30,7 +30,19 @@
                   ></v-text-field>
             </v-flex>
          </v-layout>
-         
+         <v-layout row>
+            <v-flex xs4>
+               <v-subheader>Объект</v-subheader>
+            </v-flex>
+            <v-flex xs8>
+               <v-text-field
+                  name="evntobj"
+                  label="объект"
+                  id="evntobj"
+                  v-model="evntobj"
+                  ></v-text-field>
+            </v-flex>
+         </v-layout>
          <v-layout row>
             <v-flex xs4>
                <v-subheader>Дата нач.</v-subheader>
@@ -76,11 +88,11 @@ export default {
     name: 'eventdeletedetail',
     data() {
         return {
-
+            evntobj: ''
         };
     },
     mounted() {
-
+        this.evntobj = 'id: ' + this.event.evntobj.id + ', ' + this.event.evntobj.title + ', тип: ' + this.event.evntobj.tip;
     },
     watch: {
 

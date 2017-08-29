@@ -74,7 +74,7 @@ const actions = {
         axios.post(settings.SERVER_ADDRESS + '/lists/del', list)
             .then(response => {
                 console.log('list deleted $response', response);
-                ontext.commit('INFO_SNACKBAR', {show: true, context: 'success',
+                context.commit('INFO_SNACKBAR', {show: true, context: 'success',
                     text: 'Список удален успешно'});
                 context.dispatch('getListsAll');
                 //
