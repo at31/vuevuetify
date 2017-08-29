@@ -74,8 +74,15 @@
                   v-model="currList.executor.fio"
                   readonly
                   ></v-text-field>
-            </v-flex>
-         </v-layout>
+            </v-flex>            
+         </v-layout> 
+             <v-divider></v-divider>
+      <v-card-row actions>
+         <v-btn @click.native="confirmDeleteBtn" error light>
+            <v-icon light>delete</v-icon>
+            Подтвердить удаление
+        </v-btn>        
+      </v-card-row>     
       </v-card>
     </v-tabs-content>
     
@@ -132,9 +139,11 @@
             </v-list-tile>                               
             <v-divider v-if="indx + 1 < currList.path.length"></v-divider>
             </v-list-item>
-            </v-list>
+            </v-list>            
       </v-card>
+
     </v-tabs-content>
+
   </v-tabs>
 </template>
 <script>
@@ -161,7 +170,9 @@ export default {
         }
     },
     methods: {
-        confirmNewBtn() {
+        confirmDeleteBtn() {
+            this.$store.dispatch('deleteList', this.currList);
+            this.$store.commit('CARD_TYPE_LIST', '');
         },
         showDetailPO(po) {
             this.$store.commit('SET_CURR_PO', po);

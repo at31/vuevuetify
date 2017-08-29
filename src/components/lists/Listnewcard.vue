@@ -14,6 +14,8 @@
               label="заголовок"
               id="title"
               v-model="newList.title"
+              :append-icon="'settings_voice'"
+              :append-icon-cb="titleVoiceEnter"
             ></v-text-field>
           </v-flex>
         </v-layout>
@@ -28,6 +30,8 @@
               label="описание"
               id="description"
               v-model="newList.description"
+              :append-icon="'settings_voice'"
+              :append-icon-cb="descriptionVoiceEnter"
             ></v-text-field>
           </v-flex>
         </v-layout>
@@ -68,6 +72,7 @@
 </template>
 
 <script>
+    let self = '';
     export default {
         name: 'listnewcard',
         data() {
@@ -84,6 +89,7 @@
             };
         },
         mounted() {
+            self = this;
             console.log(this.users);
         },
         watch: {
@@ -98,8 +104,13 @@
             }
         },
         methods: {
+            titleVoiceEnter() {
+                voiceSetup('title');
+            },
+            descriptionVoiceEnter() {
+                voiceSetup('description');
+            },
             confirmNewBtn() {
-                console.log(this.newList);
                 this.$store.dispatch('saveNewList', this.newList);
                 /* this.$router.push({
                     path: '/',
@@ -109,7 +120,6 @@
                 }); */
             },
             pdfCreate() {
-                console.log(this.fNewList.evnts);
                 var dd = {
                     content: [
                         {
@@ -151,6 +161,47 @@
             }
         }
     };
+
+    function voiceSetup(fname) {
+        var SpeechRecognition = '';
+        var recognition = '';
+        var noteContent = '';
+        try {
+            console.log('fname');
+            SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+        } catch (e) {
+            console.error(e);
+            self.$store.commit('INFO_SNACKBAR', {show: true, context: 'error',
+                text: 'ошибка подключения распознования голоса'});
+        }
+        recognition.onresult = function (event) {
+            var current = event.resultIndex;
+            var transcript = event.results[current][0].transcript;
+            var mobileRepeatBug = (current === 1 && transcript === event.results[0][0].transcript);
+
+            if (!mobileRepeatBug) {
+                noteContent += transcript;
+                self.newList[fname] = noteContent;
+            }
+        };
+
+        recognition.onstart = function () {
+            self.$store.commit('INFO_SNACKBAR', {show: true, context: 'success', text: 'система готова к распознованию голоса'});
+        };
+
+        recognition.onspeechend = function () {
+    //
+        };
+
+        recognition.onerror = function (event) {
+            if (event.error === 'no-speech') {
+                self.$store.commit('INFO_SNACKBAR', {show: true, context: 'error', text: 'Попробуйте еще раз'});
+            }
+        };
+
+        recognition.start();
+    }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
